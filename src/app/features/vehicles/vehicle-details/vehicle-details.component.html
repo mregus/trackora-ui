@@ -1,0 +1,605 @@
+<div class="vehicle-details-page">
+  <button mat-button (click)="backToVehicles()">
+    ← Back to Vehicles
+  </button>
+
+  @if (loading()) {
+    <div class="loading">
+      <mat-spinner diameter="42"></mat-spinner>
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <mat-card class="error-card">
+      {{ errorMessage() }}
+    </mat-card>
+  }
+
+  @if (vehicle(); as v) {
+    <header class="vehicle-header">
+      <div>
+        <h1>{{ v.year }} {{ v.make }} {{ v.model }}</h1>
+        <p>{{ v.vin || 'No VIN available' }}</p>
+      </div>
+
+      <div class="status-actions">
+      <span class="status-pill" [class]="v.status.toLowerCase()">
+        {{ v.status }}
+      </span>
+
+            <div class="status-buttons">
+              <button
+                mat-stroked-button
+                color="primary"
+                type="button"
+                (click)="updateVehicleStatus('ACTIVE')"
+                [disabled]="updatingStatus() || !canSetStatus('ACTIVE')"
+              >
+                Mark Active
+              </button>
+
+              <button
+                mat-stroked-button
+                color="primary"
+                type="button"
+                (click)="updateVehicleStatus('IN_SHOP')"
+                [disabled]="updatingStatus() || !canSetStatus('IN_SHOP')"
+              >
+                Mark In Shop
+              </button>
+
+              <button
+                mat-stroked-button
+                color="warn"
+                type="button"
+                (click)="updateVehicleStatus('OUT_OF_SERVICE')"
+                [disabled]="updatingStatus() || !canSetStatus('OUT_OF_SERVICE')"
+              >
+                Out of Service
+              </button>
+
+              <button
+                mat-stroked-button
+                type="button"
+                (click)="updateVehicleStatus('SOLD')"
+                [disabled]="updatingStatus() || !canSetStatus('SOLD')"
+              >
+                Mark Sold
+              </button>
+            </div>
+          </div>
+    </header>
+
+    <section class="cards-grid">
+      <mat-card>
+        <mat-card-title>License Plate</mat-card-title>
+        <mat-card-content>
+          <div class="metric">{{ v.licensePlate || 'N/A' }}</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-title>Current Mileage</mat-card-title>
+        <mat-card-content>
+          <div class="metric">{{ v.currentMileage | number }}</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-title>Fleet ID</mat-card-title>
+        <mat-card-content>
+          <div class="subtext">{{ v.fleetId }}</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-title>Created</mat-card-title>
+        <mat-card-content>
+          <div class="subtext">{{ v.createdAt | date:'medium' }}</div>
+        </mat-card-content>
+      </mat-card>
+    </section>
+
+    <mat-card class="edit-vehicle-card">
+      <div class="edit-card-header">
+        <mat-card-title>Vehicle Assignment</mat-card-title>
+
+        @if (!editingVehicle()) {
+          <button mat-stroked-button color="primary" type="button" (click)="startEditVehicle()">
+            Edit Vehicle
+          </button>
+        }
+      </div>
+
+      @if (editingVehicle()) {
+        <form [formGroup]="vehicleForm" class="vehicle-edit-form" (ngSubmit)="saveVehicleChanges()">
+          <mat-form-field appearance="outline">
+            <mat-label>Fleet</mat-label>
+            <mat-select formControlName="fleetId">
+              @for (fleet of fleets(); track fleet.id) {
+                <mat-option [value]="fleet.id">
+                  {{ fleet.name }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>License Plate</mat-label>
+            <input matInput formControlName="licensePlate" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Current Mileage</mat-label>
+            <input matInput type="number" formControlName="currentMileage" />
+          </mat-form-field>
+
+          <div class="edit-actions">
+            <button mat-raised-button color="primary" type="submit" [disabled]="savingVehicle()">
+              @if (savingVehicle()) {
+                Saving...
+              } @else {
+                Save Changes
+              }
+            </button>
+
+            <button mat-button type="button" (click)="cancelEditVehicle()">
+              Cancel
+            </button>
+          </div>
+        </form>
+      } @else {
+        @if (vehicle(); as v) {
+          <div class="assignment-summary">
+            <div>
+              <strong>Fleet ID</strong>
+              <span>{{ v.fleetId }}</span>
+            </div>
+
+            <div>
+              <strong>License Plate</strong>
+              <span>{{ v.licensePlate || 'N/A' }}</span>
+            </div>
+
+            <div>
+              <strong>Mileage</strong>
+              <span>{{ v.currentMileage | number }}</span>
+            </div>
+          </div>
+        }
+      }
+    </mat-card>
+
+    <mat-card class="tabs-card">
+      <mat-tab-group>
+        <mat-tab label="Overview">
+          <div class="tab-content">
+            <p>
+              Vehicle overview is loaded. Next we will add maintenance, fuel,
+              and alerts history here.
+            </p>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Maintenance">
+          <div class="tab-content">
+            @if (maintenanceRecords().length > 0) {
+              <table mat-table [dataSource]="maintenanceRecords()" class="details-table">
+                <ng-container matColumnDef="serviceType">
+                  <th mat-header-cell *matHeaderCellDef>Service</th>
+                  <td mat-cell *matCellDef="let record">
+                    <strong>{{ record.serviceType }}</strong>
+                    <div class="subtext">{{ record.description || 'No description' }}</div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="serviceDate">
+                  <th mat-header-cell *matHeaderCellDef>Date</th>
+                  <td mat-cell *matCellDef="let record">
+                    {{ record.serviceDate | date:'mediumDate' }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="mileage">
+                  <th mat-header-cell *matHeaderCellDef>Mileage</th>
+                  <td mat-cell *matCellDef="let record">
+                    {{ record.mileage | number }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="cost">
+                  <th mat-header-cell *matHeaderCellDef>Cost</th>
+                  <td mat-cell *matCellDef="let record">
+                    {{ record.cost | currency }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="vendor">
+                  <th mat-header-cell *matHeaderCellDef>Vendor</th>
+                  <td mat-cell *matCellDef="let record">
+                    {{ record.vendor || 'N/A' }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef>Status</th>
+                  <td mat-cell *matCellDef="let record">
+            <span class="status-pill" [class]="record.status.toLowerCase()">
+              {{ record.status }}
+            </span>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="maintenanceColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: maintenanceColumns"></tr>
+
+                <ng-container matColumnDef="documents">
+                  <th mat-header-cell *matHeaderCellDef>Documents</th>
+
+                  <td mat-cell *matCellDef="let record">
+                    <div class="maintenance-documents">
+                      <input
+                        #maintenanceDocInput
+                        type="file"
+                        hidden
+                        (change)="onMaintenanceDocumentSelected($event, record)"
+                      />
+
+                      <button
+                        mat-stroked-button
+                        color="primary"
+                        type="button"
+                        (click)="maintenanceDocInput.click()"
+                        [disabled]="uploadingMaintenanceDocument() === record.id"
+                      >
+                        @if (uploadingMaintenanceDocument() === record.id) {
+                          Uploading...
+                        } @else {
+                          Upload Invoice
+                        }
+                      </button>
+
+                      @if (maintenanceDocuments()[record.id]?.length) {
+                        <div class="doc-links">
+                          @for (doc of maintenanceDocuments()[record.id]; track doc.id) {
+                            <button
+                              mat-button
+                              color="primary"
+                              type="button"
+                              (click)="downloadDocument(doc)"
+                            >
+                              {{ doc.originalFileName }}
+                            </button>
+                          }
+                        </div>
+                      }
+                    </div>
+                  </td>
+                </ng-container>
+              </table>
+            } @else {
+              <p>No maintenance records found for this vehicle.</p>
+            }
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Fuel">
+          <div class="tab-content">
+            @if (fuelLogs().length > 0) {
+              <table mat-table [dataSource]="fuelLogs()" class="details-table">
+
+                <ng-container matColumnDef="fuelDate">
+                  <th mat-header-cell *matHeaderCellDef>Date</th>
+                  <td mat-cell *matCellDef="let log">
+                    {{ log.fuelDate | date:'mediumDate' }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="mileage">
+                  <th mat-header-cell *matHeaderCellDef>Mileage</th>
+                  <td mat-cell *matCellDef="let log">
+                    {{ log.mileage | number }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="gallons">
+                  <th mat-header-cell *matHeaderCellDef>Gallons</th>
+                  <td mat-cell *matCellDef="let log">
+                    {{ log.gallons | number:'1.1-3' }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="totalCost">
+                  <th mat-header-cell *matHeaderCellDef>Total Cost</th>
+                  <td mat-cell *matCellDef="let log">
+                    {{ log.totalCost | currency }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="pricePerGallon">
+                  <th mat-header-cell *matHeaderCellDef>Price / Gal</th>
+                  <td mat-cell *matCellDef="let log">
+                    {{ log.pricePerGallon | currency }}
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="fuelColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: fuelColumns"></tr>
+              </table>
+            } @else {
+              <p>No fuel logs found for this vehicle.</p>
+            }
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Alerts">
+          <div class="tab-content">
+            @if (alerts().length > 0) {
+              <table mat-table [dataSource]="alerts()" class="details-table">
+
+                <ng-container matColumnDef="type">
+                  <th mat-header-cell *matHeaderCellDef>Type</th>
+                  <td mat-cell *matCellDef="let alert">
+                    <strong>{{ alert.type }}</strong>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="message">
+                  <th mat-header-cell *matHeaderCellDef>Message</th>
+                  <td mat-cell *matCellDef="let alert">
+                    {{ alert.message }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="createdAt">
+                  <th mat-header-cell *matHeaderCellDef>Created</th>
+                  <td mat-cell *matCellDef="let alert">
+                    {{ alert.createdAt | date:'medium' }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef>Status</th>
+                  <td mat-cell *matCellDef="let alert">
+            <span
+              class="status-pill"
+              [class.resolved]="alert.resolved"
+              [class.open]="!alert.resolved"
+            >
+              {{ alert.resolved ? 'RESOLVED' : 'OPEN' }}
+            </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef>Actions</th>
+                  <td mat-cell *matCellDef="let alert">
+                    @if (!alert.resolved) {
+                      <button
+                        mat-stroked-button
+                        color="primary"
+                        (click)="resolveAlert(alert)"
+                      >
+                        Resolve
+                      </button>
+                    } @else {
+                      <span class="subtext">No actions</span>
+                    }
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="alertColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: alertColumns"></tr>
+
+              </table>
+            } @else {
+              <p>No alerts found for this vehicle.</p>
+            }
+          </div>
+        </mat-tab>
+
+        <mat-tab label="AI Insights">
+          <div class="tab-content">
+            <div class="tab-header-row">
+              <div>
+                <h3>AI Insights</h3>
+                <p class="subtext">
+                  Generate and review AI summaries for this vehicle.
+                </p>
+              </div>
+
+              <button
+                mat-raised-button
+                color="primary"
+                type="button"
+                (click)="generateAiInsight()"
+                [disabled]="generatingInsight()"
+              >
+                @if (generatingInsight()) {
+                  Generating...
+                } @else {
+                  Generate New Insight
+                }
+              </button>
+            </div>
+
+            <h4>Latest Insight</h4>
+
+            @if (latestInsight(); as insight) {
+              <mat-card class="insight-card">
+                <mat-card-subtitle>
+                  {{ insight.createdAt | date:'medium' }}
+                </mat-card-subtitle>
+
+                <mat-card-content>
+                  <p>{{ insight.summary }}</p>
+                </mat-card-content>
+              </mat-card>
+            } @else {
+              <p>No AI insight found yet.</p>
+            }
+
+            <div class="older-insights-actions">
+              <button
+                mat-stroked-button
+                color="primary"
+                type="button"
+                (click)="loadOlderInsights()"
+                [disabled]="loadingOlderInsights()"
+              >
+                @if (loadingOlderInsights()) {
+                  Loading...
+                } @else {
+                  Load Older Insights
+                }
+              </button>
+            </div>
+
+            @if (showOlderInsights()) {
+              <h4>Older Insights</h4>
+
+              @if (olderInsights().length > 0) {
+                <div class="insights-list">
+                  @for (insight of olderInsights(); track insight.id) {
+                    <mat-card class="insight-card">
+                      <mat-card-subtitle>
+                        {{ insight.createdAt | date:'medium' }}
+                      </mat-card-subtitle>
+
+                      <mat-card-content>
+                        <p>{{ insight.summary }}</p>
+                      </mat-card-content>
+                    </mat-card>
+                  }
+                </div>
+              } @else {
+                <p>No older insights found.</p>
+              }
+            }
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Documents">
+          <div class="tab-content">
+
+            <div class="tab-header-row">
+              <div>
+                <h3>Vehicle Documents</h3>
+                <p class="subtext">
+                  Upload and manage files for this vehicle.
+                </p>
+              </div>
+
+              <div class="document-upload-actions">
+                <mat-form-field appearance="outline" class="document-type-select">
+                  <mat-label>Document Type</mat-label>
+                  <mat-select
+                    [value]="selectedDocumentType()"
+                    (selectionChange)="selectedDocumentType.set($event.value)"
+                  >
+                    @for (type of documentTypes; track type) {
+                      <mat-option [value]="type">
+                        {{ type }}
+                      </mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+
+                <input
+                  #documentInput
+                  type="file"
+                  hidden
+                  (change)="onDocumentSelected($event)"
+                />
+
+                <button
+                  mat-raised-button
+                  color="primary"
+                  type="button"
+                  [disabled]="uploadingDocument()"
+                  (click)="documentInput.click()"
+                >
+                  @if (uploadingDocument()) {
+                    Uploading...
+                  } @else {
+                    Upload Document
+                  }
+                </button>
+              </div>
+            </div>
+
+            @if (documents().length > 0) {
+
+              <table
+                mat-table
+                [dataSource]="documents()"
+                class="mat-elevation-z1 full-width-table"
+              >
+
+                <ng-container matColumnDef="fileName">
+                  <th mat-header-cell *matHeaderCellDef>File</th>
+                  <td mat-cell *matCellDef="let doc">
+                    {{ doc.originalFileName }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="documentType">
+                  <th mat-header-cell *matHeaderCellDef>Type</th>
+                  <td mat-cell *matCellDef="let doc">
+                    {{ doc.documentType || 'GENERAL' }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fileSize">
+                  <th mat-header-cell *matHeaderCellDef>Size</th>
+                  <td mat-cell *matCellDef="let doc">
+                    {{ formatFileSize(doc.fileSize) }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="createdAt">
+                  <th mat-header-cell *matHeaderCellDef>Uploaded</th>
+                  <td mat-cell *matCellDef="let doc">
+                    {{ doc.createdAt | date:'medium' }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef></th>
+
+                  <td mat-cell *matCellDef="let doc">
+                    <button
+                      mat-button
+                      color="primary"
+                      type="button"
+                      (click)="downloadDocument(doc)"
+                    >
+                      Download
+                    </button>
+
+                    <button
+                      mat-button
+                      color="warn"
+                      type="button"
+                      (click)="deleteDocument(doc)"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="documentColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: documentColumns"></tr>
+
+              </table>
+
+            } @else {
+              <p>No documents uploaded yet.</p>
+            }
+
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card>
+  }
+</div>

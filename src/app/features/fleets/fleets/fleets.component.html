@@ -1,0 +1,92 @@
+<div class="fleets-page">
+  <header class="fleets-header">
+    <div>
+      <h1>Fleets</h1>
+      <p>Create and manage your fleet groups.</p>
+    </div>
+  </header>
+
+  @if (errorMessage()) {
+    <mat-card class="error-card">
+      {{ errorMessage() }}
+    </mat-card>
+  }
+
+  <section class="layout">
+    <mat-card class="create-card">
+      <mat-card-title>Create Fleet</mat-card-title>
+
+      <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="createFleet()">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Fleet Name</mat-label>
+            <input matInput formControlName="name" placeholder="Demo Fleet" />
+
+            @if (form.controls.name.hasError('required')) {
+              <mat-error>Fleet name is required</mat-error>
+            }
+
+            @if (form.controls.name.hasError('maxlength')) {
+              <mat-error>Fleet name is too long</mat-error>
+            }
+          </mat-form-field>
+
+          <button
+            mat-raised-button
+            color="primary"
+            class="full-width"
+            type="submit"
+            [disabled]="saving()"
+          >
+            @if (saving()) {
+              Creating...
+            } @else {
+              Create Fleet
+            }
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="list-card">
+      <mat-card-title>Your Fleets</mat-card-title>
+
+      <mat-card-content>
+        @if (loading()) {
+          <div class="loading">
+            <mat-spinner diameter="36"></mat-spinner>
+          </div>
+        }
+
+        @if (!loading() && fleets().length === 0) {
+          <div class="empty-state">
+            No fleets found.
+          </div>
+        }
+
+        @if (!loading() && fleets().length > 0) {
+          <div class="fleet-list">
+            @for (fleet of fleets(); track fleet.id) {
+              <button
+                type="button"
+                class="fleet-row"
+                [class.selected]="isSelected(fleet.id)"
+                (click)="selectFleet(fleet.id)"
+              >
+                <div>
+                  <strong>{{ fleet.name }}</strong>
+                  <span>{{ fleet.id }}</span>
+                  <small>Created {{ fleet.createdAt | date:'mediumDate' }}</small>
+                </div>
+
+                @if (isSelected(fleet.id)) {
+                  <mat-icon>check_circle</mat-icon>
+                }
+              </button>
+            }
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+  </section>
+</div>

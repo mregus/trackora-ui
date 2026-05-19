@@ -1,0 +1,168 @@
+<div class="alerts-page">
+  <header class="alerts-header">
+    <div>
+      <h1>Alerts</h1>
+      <p>View and resolve fleet alerts.</p>
+    </div>
+
+    <div class="header-actions">
+      <mat-form-field appearance="outline" class="select-field">
+        <mat-label>Select Fleet</mat-label>
+        <mat-select
+          [value]="selectedFleetId()"
+          (selectionChange)="onFleetChange($event.value)"
+        >
+          @for (fleet of fleets(); track fleet.id) {
+            <mat-option [value]="fleet.id">
+              {{ fleet.name }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" (click)="refresh()">
+        Refresh
+      </button>
+    </div>
+  </header>
+
+  @if (errorMessage()) {
+    <mat-card class="error-card">
+      {{ errorMessage() }}
+    </mat-card>
+  }
+
+  @if (loading()) {
+    <div class="loading">
+      <mat-spinner diameter="42"></mat-spinner>
+    </div>
+  }
+
+  <div class="filters-row">
+    <mat-form-field appearance="outline">
+      <mat-label>Severity</mat-label>
+      <mat-select
+        [value]="severityFilter()"
+        (selectionChange)="severityFilter.set($event.value)"
+      >
+        <mat-option value="ALL">All</mat-option>
+        <mat-option value="CRITICAL">Critical</mat-option>
+        <mat-option value="WARNING">Warning</mat-option>
+        <mat-option value="INFO">Info</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+      <mat-select
+        [value]="statusFilter()"
+        (selectionChange)="statusFilter.set($event.value)"
+      >
+        <mat-option value="ALL">All</mat-option>
+        <mat-option value="OPEN">Open</mat-option>
+        <mat-option value="RESOLVED">Resolved</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  @if (!loading() && alerts().length > 0) {
+    <mat-card>
+      <table mat-table [dataSource]="paginatedAlerts()" class="alerts-table">
+
+        <ng-container matColumnDef="severity">
+          <th mat-header-cell *matHeaderCellDef>Severity</th>
+          <td mat-cell *matCellDef="let alert">
+            <span class="severity-pill" [class]="alert.severity.toLowerCase()">
+              {{ alert.severity }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let alert">
+            <span class="alert-type">
+              {{ alert.type }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="message">
+          <th mat-header-cell *matHeaderCellDef>Message</th>
+          <td mat-cell *matCellDef="let alert">
+            {{ alert.message }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="createdAt">
+          <th mat-header-cell *matHeaderCellDef>Created</th>
+          <td mat-cell *matCellDef="let alert">
+            {{ alert.createdAt | date:'medium' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let alert">
+            <span
+              class="status-pill"
+              [class.resolved]="alert.resolved"
+              [class.open]="!alert.resolved"
+            >
+              {{ alert.resolved ? 'RESOLVED' : 'OPEN' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let alert">
+            @if (!alert.resolved) {
+              <button
+                mat-stroked-button
+                color="primary"
+                (click)="resolveAlert(alert)"
+              >
+                Resolve
+              </button>
+            } @else {
+              <span class="resolved-text">
+                No actions
+              </span>
+            }
+            @if (alert.vehicleId) {
+              <button
+                mat-button
+                color="primary"
+                type="button"
+                (click)="openVehicle(alert)"
+              >
+                View Vehicle
+              </button>
+            }
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+      </table>
+
+      <mat-paginator
+        [length]="alerts().length"
+        [pageSize]="pageSize()"
+        [pageIndex]="pageIndex()"
+        [pageSizeOptions]="[5, 10, 25, 50]"
+        (page)="onPageChange($event)"
+      >
+      </mat-paginator>
+
+    </mat-card>
+  }
+
+  @if (!loading() && filteredAlerts().length === 0 && !errorMessage()) {
+    <mat-card class="empty-card">
+      No alerts found for this fleet.
+    </mat-card>
+  }
+</div>

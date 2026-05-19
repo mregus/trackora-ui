@@ -1,0 +1,214 @@
+<div class="dashboard-page">
+  <header class="dashboard-header">
+    <div>
+      <h1>Fleet Dashboard</h1>
+      <p>Overview of vehicles, alerts, costs, and AI insights.</p>
+    </div>
+
+    <div class="header-actions">
+      <mat-form-field appearance="outline" class="fleet-select">
+        <mat-label>Select Fleet</mat-label>
+        <mat-select
+          [value]="selectedFleetId()"
+          (selectionChange)="onFleetChange($event.value)"
+        >
+          @for (fleet of fleets(); track fleet.id) {
+            <mat-option [value]="fleet.id">
+              {{ fleet.name }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+<!--      <button mat-raised-button color="primary" (click)="refresh()">-->
+<!--        Refresh-->
+<!--      </button>-->
+    </div>
+  </header>
+
+  @if (loading()) {
+    <div class="loading">
+      <mat-spinner diameter="42"></mat-spinner>
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <mat-card class="error-card">
+      {{ errorMessage() }}
+    </mat-card>
+  }
+
+  @if (summary(); as dashboard) {
+    <section class="fleet-title">
+      <h2>{{ dashboard.fleetName }}</h2>
+      <span>{{ dashboard.fleetId }}</span>
+    </section>
+
+    <section class="cards-grid">
+      <mat-card>
+        <mat-card-title>Total Vehicles</mat-card-title>
+        <mat-card-content>
+          <div class="metric">{{ dashboard.totalVehicles }}</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-title>Active Vehicles</mat-card-title>
+        <mat-card-content>
+          <div class="metric">{{ dashboard.activeVehicles }}</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-title>In Shop</mat-card-title>
+        <mat-card-content>
+          <div class="metric warning">{{ dashboard.vehiclesInShop }}</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-title>Out of Service</mat-card-title>
+        <mat-card-content>
+          <div class="metric danger">{{ dashboard.outOfServiceVehicles }}</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-title>Open Alerts</mat-card-title>
+        <mat-card-content>
+          <div class="metric warning">{{ dashboard.openAlerts }}</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-title>Maintenance Cost</mat-card-title>
+        <mat-card-content>
+          <div class="metric">
+            {{ dashboard.monthlyMaintenanceCost | currency }}
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-title>Fuel Cost</mat-card-title>
+        <mat-card-content>
+          <div class="metric">
+            {{ dashboard.monthlyFuelCost | currency }}
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </section>
+
+    <section class="charts-grid">
+      <mat-card class="chart-card">
+        <mat-card-title>Vehicle Status</mat-card-title>
+        <mat-card-content>
+          <div class="chart-container">
+            <canvas
+              baseChart
+              [type]="'doughnut'"
+              [data]="vehicleStatusChartData"
+              [options]="vehicleStatusChartOptions"
+            ></canvas>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="chart-card">
+        <mat-card-title>Fuel Cost Trend</mat-card-title>
+        <mat-card-content>
+          <div class="chart-container">
+            <canvas
+              baseChart
+              [type]="'line'"
+              [data]="fuelCostChartData"
+              [options]="lineChartOptions"
+            ></canvas>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="chart-card">
+        <mat-card-title>Maintenance Cost Trend</mat-card-title>
+        <mat-card-content>
+          <div class="chart-container">
+            <canvas
+              baseChart
+              [type]="'line'"
+              [data]="maintenanceCostChartData"
+              [options]="lineChartOptions"
+            ></canvas>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </section>
+
+    <mat-card class="ai-card">
+      <div class="ai-card-header">
+        <mat-card-title>Fleet AI Summary</mat-card-title>
+
+        <div class="ai-actions">
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            (click)="generateFleetInsight()"
+            [disabled]="generatingFleetInsight()"
+          >
+            @if (generatingFleetInsight()) {
+              Generating...
+            } @else {
+              Generate New Summary
+            }
+          </button>
+
+          <button
+            mat-stroked-button
+            color="primary"
+            type="button"
+            (click)="loadOlderFleetInsights()"
+            [disabled]="loadingOlderFleetInsights()"
+          >
+            @if (loadingOlderFleetInsights()) {
+              Loading...
+            } @else {
+              Load Older Summaries
+            }
+          </button>
+        </div>
+      </div>
+
+      <mat-card-content>
+        <h4>Latest Summary</h4>
+
+        @if (latestFleetInsight()) {
+          <p>{{ latestFleetInsight() }}</p>
+        } @else {
+          <p>No fleet AI summary generated yet.</p>
+        }
+
+        @if (showOlderFleetInsights()) {
+          <h4>Older Summaries</h4>
+
+          @if (olderFleetInsights().length > 0) {
+            <div class="older-insights">
+              @for (insight of olderFleetInsights(); track insight.id) {
+                <mat-card class="older-insight-card">
+                  <mat-card-subtitle>
+                    {{ insight.createdAt | date:'medium' }}
+                  </mat-card-subtitle>
+
+                  <mat-card-content>
+                    <p>{{ insight.summary }}</p>
+                  </mat-card-content>
+                </mat-card>
+              }
+            </div>
+          } @else {
+            <p>No older fleet summaries found.</p>
+          }
+        }
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

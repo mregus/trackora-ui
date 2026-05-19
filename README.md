@@ -1,59 +1,183 @@
-# FleetwiseUi
+# Trackora UI
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.10.
+Trackora UI is the Angular frontend for the Trackora fleet operations platform.
 
-## Development server
+The application provides:
 
-To start a local development server, run:
+- Fleet management
+- Vehicle management
+- Maintenance tracking
+- Fuel logging and analytics
+- Operational alerts with severity filtering
+- AI-generated fleet and vehicle insights
+- Vehicle and maintenance document uploads
+- Dashboard charts and KPIs
+- Pagination and filtering
+- Responsive Material UI experience
 
-```bash
-ng serve
+---
+
+## Tech Stack
+
+- Angular 21
+- Angular Material
+- TypeScript
+- RxJS
+- Angular Signals
+- Chart.js
+- Vite
+- JWT Authentication
+
+---
+
+## Features
+
+### Dashboard
+- Fleet KPIs
+- Fuel analytics
+- Maintenance summaries
+- AI-generated fleet insights
+- Open alert counts
+
+### Vehicles
+- Vehicle management
+- Vehicle detail views
+- VIN support
+- Fleet reassignment
+- Mileage updates
+- Vehicle AI summaries
+
+### Maintenance
+- Maintenance scheduling
+- Maintenance history
+- Status tracking
+- Maintenance document uploads
+- Invoice and image support
+
+### Fuel Logs
+- Fuel tracking
+- MPG analytics
+- Fuel anomaly alerts
+
+### Alerts
+- Severity levels:
+  - CRITICAL
+  - WARNING
+  - INFO
+- Filtering
+- Pagination
+- Alert resolution workflows
+
+### Documents
+- Vehicle document uploads
+- Maintenance invoice uploads
+- Image validation
+- Secure downloads
+- File size limits
+
+---
+
+## Project Structure
+
+```text
+src/app
+ ├── core
+ ├── features
+ │    ├── alerts
+ │    ├── auth
+ │    ├── dashboard
+ │    ├── fuel
+ │    ├── maintenance
+ │    └── vehicles
+ ├── shared
+ └── layout
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+## Environment Configuration
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Update: `src/environments/environment.ts`
 
-```bash
-ng generate component component-name
+Example:
+```javascript
+export const environment = {
+  production: false,
+  apiBaseUrl: 'http://localhost:8080/api'
+};
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Development Server
 
-```bash
-ng generate --help
-```
+Install dependencies: `npm install`
+
+Run locally: `ng serve`
+
+Application URL: `http://localhost:4200`
 
 ## Building
 
-To build the project run:
+Production build: `ng build`
 
-```bash
-ng build
-```
+Build artifacts are generated in folder: `dist`
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Running Tests
 
-## Running unit tests
+Unit tests: `ng test`
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+---
 
-```bash
-ng test
-```
+## Authentication
 
-## Running end-to-end tests
+- Trackora UI authenticates using JWT tokens issued by the backend API.
 
-For end-to-end (e2e) testing, run:
+### Authentication flow:
 
-```bash
-ng e2e
-```
+- Login/Register
+- Receive JWT token
+- Store token locally
+- Automatically attach token to API requests
+- AI Insights
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### Trackora supports AI-generated operational summaries for:
 
-## Additional Resources
+- Fleets
+- Vehicles
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### Protections include:
+
+- Daily generation limits
+- Mock AI mode support
+- Snackbar error handling
+
+### UI Features
+
+- Angular Material design
+- Snackbar notifications
+- Responsive layouts
+- Loading states
+- Pagination
+- Filtering
+- Severity badges
+- Confirmation dialogs
+- Backend API
+
+### The frontend expects the Trackora API backend to be running:
+
+http://localhost:8080
+
+### Swagger UI:
+
+http://localhost:8080/swagger-ui/index.html
+
+
+
+## Future Improvements/Potential future enhancements:
+
+- Dark mode
+- Role-based access control
+- Multi-tenant organizations
+- Real-time notifications (rabbitmq or kafka)
+- Mobile app support
+- Export/reporting features (new microservice)
+- GPS tracking (new microservice)

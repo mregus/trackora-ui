@@ -1,0 +1,51 @@
+.brand {
+  font-weight: 700;
+  margin-right: 2rem;
+}
+
+nav {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.active-link {
+  background: rgba(255, 255, 255, 0.18);
+}
+.alert-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  margin-left: 6px;
+  border-radius: 999px;
+  background: #dc2626;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+button[mat-icon-button] {
+  position: relative;
+}
+
+.icon-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  transform: scale(0.85);
+}
+
+::ng-deep .alerts-menu .mat-mdc-menu-content {
+  max-width: 420px;
+}
+
+::ng-deep .alerts-menu button span {
+  white-space: normal;
+  line-height: 1.25;
+}

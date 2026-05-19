@@ -1,0 +1,191 @@
+<div class="vehicles-page">
+  <header class="vehicles-header">
+    <div>
+      <h1>Vehicles</h1>
+      <p>View and add vehicles by fleet.</p>
+    </div>
+
+    <div class="header-actions">
+      <mat-form-field appearance="outline" class="fleet-select">
+        <mat-label>Select Fleet</mat-label>
+        <mat-select
+          [value]="selectedFleetId()"
+          (selectionChange)="onFleetChange($event.value)"
+        >
+          @for (fleet of fleets(); track fleet.id) {
+            <mat-option [value]="fleet.id">
+              {{ fleet.name }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+<!--      <button mat-raised-button color="primary" (click)="refresh()">-->
+<!--        Refresh-->
+<!--      </button>-->
+    </div>
+  </header>
+
+  @if (errorMessage()) {
+    <mat-card class="error-card">
+      {{ errorMessage() }}
+    </mat-card>
+  }
+
+  <mat-card class="create-card">
+    <mat-card-title>Add Vehicle</mat-card-title>
+
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="createVehicle()" class="vehicle-form">
+        <div class="vin-row">
+          <mat-form-field appearance="outline">
+            <mat-label>VIN</mat-label>
+            <input matInput formControlName="vin" />
+          </mat-form-field>
+
+          <button
+            mat-stroked-button
+            color="primary"
+            type="button"
+            (click)="decodeVin()"
+            [disabled]="decodingVin()"
+          >
+            @if (decodingVin()) {
+              Decoding...
+            } @else {
+              Decode VIN
+            }
+          </button>
+        </div>
+
+        @if (decodedVehicle()) {
+          <div class="decoded-vehicle">
+            Decoded: {{ decodedVehicle() }}
+          </div>
+        }
+
+        <div class="vehicle-details-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Make</mat-label>
+            <input matInput formControlName="make" />
+
+            @if (form.controls.make.hasError('required')) {
+              <mat-error>Make is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Model</mat-label>
+            <input matInput formControlName="model" />
+
+            @if (form.controls.model.hasError('required')) {
+              <mat-error>Model is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Year</mat-label>
+            <input matInput type="number" formControlName="year" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>License Plate</mat-label>
+            <input matInput formControlName="licensePlate" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Current Mileage</mat-label>
+            <input matInput type="number" formControlName="currentMileage" />
+          </mat-form-field>
+
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="saving()"
+          >
+            @if (saving()) {
+              Saving...
+            } @else {
+              Add Vehicle
+            }
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  @if (loading()) {
+    <div class="loading">
+      <mat-spinner diameter="42"></mat-spinner>
+    </div>
+  }
+
+  @if (!loading() && vehicles().length > 0) {
+    <mat-card>
+      <table mat-table [dataSource]="paginatedVehicles()" class="vehicles-table">
+        <ng-container matColumnDef="vehicle">
+          <th mat-header-cell *matHeaderCellDef>Vehicle</th>
+          <td mat-cell *matCellDef="let vehicle">
+            <strong>{{ vehicle.make }} {{ vehicle.model }}</strong>
+            <div class="subtext">VIN: {{ vehicle.vin || 'N/A' }}</div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="year">
+          <th mat-header-cell *matHeaderCellDef>Year</th>
+          <td mat-cell *matCellDef="let vehicle">
+            {{ vehicle.year }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="licensePlate">
+          <th mat-header-cell *matHeaderCellDef>Plate</th>
+          <td mat-cell *matCellDef="let vehicle">
+            {{ vehicle.licensePlate || 'N/A' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="mileage">
+          <th mat-header-cell *matHeaderCellDef>Mileage</th>
+          <td mat-cell *matCellDef="let vehicle">
+            {{ vehicle.currentMileage | number }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let vehicle">
+            <span class="status-pill" [class]="vehicle.status.toLowerCase()">
+              {{ vehicle.status }}
+            </span>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          class="clickable-row"
+          (click)="openVehicle(row)"
+        ></tr>
+      </table>
+
+      <mat-paginator
+        [length]="vehicles().length"
+        [pageSize]="pageSize()"
+        [pageIndex]="pageIndex()"
+        [pageSizeOptions]="[5, 10, 25, 50]"
+        (page)="onPageChange($event)"
+      >
+      </mat-paginator>
+
+    </mat-card>
+  }
+
+  @if (!loading() && vehicles().length === 0 && !errorMessage()) {
+    <mat-card class="empty-card">
+      No vehicles found for this fleet.
+    </mat-card>
+  }
+</div>

@@ -1,0 +1,281 @@
+<div class="maintenance-page">
+  <header class="maintenance-header">
+    <div>
+      <h1>Maintenance</h1>
+      <p>Add and review service records by vehicle.</p>
+    </div>
+
+    <div class="header-actions">
+      <mat-form-field appearance="outline" class="select-field">
+        <mat-label>Select Fleet</mat-label>
+        <mat-select
+          [value]="selectedFleetId()"
+          (selectionChange)="onFleetChange($event.value)"
+        >
+          @for (fleet of fleets(); track fleet.id) {
+            <mat-option [value]="fleet.id">
+              {{ fleet.name }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="select-field">
+        <mat-label>Select Vehicle</mat-label>
+        <mat-select
+          [value]="selectedVehicleId()"
+          (selectionChange)="onVehicleChange($event.value)"
+        >
+          @for (vehicle of vehicles(); track vehicle.id) {
+            <mat-option [value]="vehicle.id">
+              {{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" (click)="refresh()">
+        Refresh
+      </button>
+    </div>
+  </header>
+
+  @if (errorMessage()) {
+    <mat-card class="error-card">
+      {{ errorMessage() }}
+    </mat-card>
+  }
+
+  <mat-card class="create-card">
+    <mat-card-title>Add Maintenance Record</mat-card-title>
+
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="createMaintenance()" class="maintenance-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Service Type</mat-label>
+          <mat-select formControlName="serviceType">
+            @for (type of serviceTypes; track type) {
+              <mat-option [value]="type">
+                {{ type }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Service Date</mat-label>
+          <input matInput type="date" formControlName="serviceDate" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Mileage</mat-label>
+          <input matInput type="number" formControlName="mileage" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Cost</mat-label>
+          <input matInput type="number" formControlName="cost" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Vendor</mat-label>
+          <input matInput formControlName="vendor" />
+        </mat-form-field>
+
+<!--        <mat-form-field appearance="outline">-->
+<!--          <mat-label>Status</mat-label>-->
+<!--          <mat-select formControlName="status">-->
+<!--            @for (status of statuses; track status) {-->
+<!--              <mat-option [value]="status">-->
+<!--                {{ status }}-->
+<!--              </mat-option>-->
+<!--            }-->
+<!--          </mat-select>-->
+<!--        </mat-form-field>-->
+
+        <mat-form-field appearance="outline" class="wide">
+          <mat-label>Description</mat-label>
+          <input matInput formControlName="description" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Next Service Date</mat-label>
+          <input matInput type="date" formControlName="nextServiceDate" />
+        </mat-form-field>
+
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="saving()"
+        >
+          @if (saving()) {
+            Saving...
+          } @else {
+            Add Record
+          }
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  @if (loading()) {
+    <div class="loading">
+      <mat-spinner diameter="42"></mat-spinner>
+    </div>
+  }
+
+  @if (!loading() && records().length > 0) {
+    <mat-card>
+      <table mat-table [dataSource]="paginatedRecords()" class="maintenance-table">
+        <ng-container matColumnDef="serviceType">
+          <th mat-header-cell *matHeaderCellDef>Service</th>
+          <td mat-cell *matCellDef="let record">
+            <strong>{{ record.serviceType }}</strong>
+            <div class="subtext">{{ record.description || 'No description' }}</div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="serviceDate">
+          <th mat-header-cell *matHeaderCellDef>Date</th>
+          <td mat-cell *matCellDef="let record">
+            {{ record.serviceDate | date:'mediumDate' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="mileage">
+          <th mat-header-cell *matHeaderCellDef>Mileage</th>
+          <td mat-cell *matCellDef="let record">
+            {{ record.mileage | number }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="cost">
+          <th mat-header-cell *matHeaderCellDef>Cost</th>
+          <td mat-cell *matCellDef="let record">
+            {{ record.cost | currency }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="vendor">
+          <th mat-header-cell *matHeaderCellDef>Vendor</th>
+          <td mat-cell *matCellDef="let record">
+            {{ record.vendor || 'N/A' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let record">
+            <span class="status-pill" [class]="record.status.toLowerCase()">
+              {{ record.status }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="documents">
+          <th mat-header-cell *matHeaderCellDef>Documents</th>
+
+          <td mat-cell *matCellDef="let record">
+            <div class="maintenance-documents">
+              <input
+                #maintenanceDocInput
+                type="file"
+                hidden
+                (change)="onMaintenanceDocumentSelected($event, record)"
+              />
+
+              <button
+                mat-stroked-button
+                color="primary"
+                type="button"
+                (click)="maintenanceDocInput.click()"
+                [disabled]="uploadingMaintenanceDocument() === record.id"
+              >
+                @if (uploadingMaintenanceDocument() === record.id) {
+                  Uploading...
+                } @else {
+                  Upload
+                }
+              </button>
+
+              @if (maintenanceDocuments()[record.id]?.length) {
+                <div class="doc-links">
+                  @for (doc of maintenanceDocuments()[record.id]; track doc.id) {
+                    <div class="doc-row">
+                      <button
+                        mat-button
+                        color="primary"
+                        type="button"
+                        (click)="downloadDocument(doc)"
+                      >
+                        {{ doc.originalFileName }}
+                      </button>
+
+                      <button
+                        mat-button
+                        color="warn"
+                        type="button"
+                        (click)="deleteDocument(doc, record)"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let record">
+            @if (record.status === 'SCHEDULED') {
+              <div class="action-buttons">
+                <button
+                  mat-stroked-button
+                  color="primary"
+                  type="button"
+                  (click)="updateStatus(record, 'COMPLETED')"
+                >
+                  Complete
+                </button>
+
+                <button
+                  mat-stroked-button
+                  color="warn"
+                  type="button"
+                  (click)="updateStatus(record, 'CANCELLED')"
+                >
+                  Cancel
+                </button>
+              </div>
+            } @else {
+              <span class="subtext">No actions</span>
+            }
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <mat-paginator
+        [length]="records().length"
+        [pageSize]="pageSize()"
+        [pageIndex]="pageIndex()"
+        [pageSizeOptions]="[5, 10, 25, 50]"
+        (page)="onPageChange($event)"
+      >
+      </mat-paginator>
+
+    </mat-card>
+  }
+
+  @if (!loading() && records().length === 0 && !errorMessage()) {
+    <mat-card class="empty-card">
+      No maintenance records found for this vehicle.
+    </mat-card>
+  }
+</div>

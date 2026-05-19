@@ -1,0 +1,143 @@
+.alerts-page {
+  padding: 2rem;
+  background: #f4f6f8;
+  min-height: 100vh;
+}
+
+.alerts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.alerts-header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.alerts-header p {
+  margin: 0.25rem 0 0;
+  color: #667085;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.select-field {
+  width: 260px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+}
+
+.error-card,
+.empty-card {
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.error-card {
+  color: #b00020;
+}
+
+.alerts-table {
+  width: 100%;
+}
+
+.alert-type {
+  font-weight: 700;
+}
+
+.status-pill {
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.status-pill.open {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.status-pill.resolved {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.resolved-text {
+  color: #667085;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 1000px) {
+  .alerts-header {
+    flex-direction: column;
+  }
+
+  .header-actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .select-field {
+    width: 100%;
+  }
+}
+
+.severity-pill {
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.severity-pill.critical {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.severity-pill.warning {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.severity-pill.info {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.filters-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.filters-row mat-form-field {
+  width: 220px;
+}
+
+.success-snackbar {
+  --mdc-snackbar-container-color: #16a34a;
+  --mdc-snackbar-supporting-text-color: white;
+}
+
+.error-snackbar {
+  --mdc-snackbar-container-color: #dc2626;
+  --mdc-snackbar-supporting-text-color: white;
+}
+
+.info-snackbar {
+  --mdc-snackbar-container-color: #2563eb;
+  --mdc-snackbar-supporting-text-color: white;
+}

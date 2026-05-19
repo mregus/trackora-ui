@@ -1,0 +1,122 @@
+.fleets-page {
+  padding: 2rem;
+  background: #f4f6f8;
+  min-height: 100vh;
+}
+
+.fleets-header {
+  margin-bottom: 2rem;
+}
+
+.fleets-header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.fleets-header p {
+  margin: 0.25rem 0 0;
+  color: #667085;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 1.5rem;
+}
+
+.create-card,
+.list-card {
+  padding: 1rem;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.error-card {
+  padding: 1rem;
+  color: #b00020;
+  margin-bottom: 1rem;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.empty-state {
+  color: #667085;
+  padding: 1rem 0;
+}
+
+.fleet-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.fleet-row {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.fleet-row:hover {
+  background: #f9fafb;
+}
+
+.fleet-row.selected {
+  border-color: #3f51b5;
+  background: #eef2ff;
+}
+
+.fleet-row strong {
+  display: block;
+  font-size: 1rem;
+}
+
+.fleet-row span {
+  display: block;
+  font-size: 0.75rem;
+  color: #667085;
+  margin-top: 0.25rem;
+}
+
+.fleet-row small {
+  display: block;
+  font-size: 0.75rem;
+  color: #667085;
+  margin-top: 0.25rem;
+}
+
+.fleet-row mat-icon {
+  color: #3f51b5;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.success-snackbar {
+  --mdc-snackbar-container-color: #16a34a;
+  --mdc-snackbar-supporting-text-color: white;
+}
+
+.error-snackbar {
+  --mdc-snackbar-container-color: #dc2626;
+  --mdc-snackbar-supporting-text-color: white;
+}
+
+.info-snackbar {
+  --mdc-snackbar-container-color: #2563eb;
+  --mdc-snackbar-supporting-text-color: white;
+}
