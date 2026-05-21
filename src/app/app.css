@@ -49,3 +49,25 @@ button[mat-icon-button] {
   white-space: normal;
   line-height: 1.25;
 }
+
+.app-toolbar {
+  background: linear-gradient(135deg, #020617, #0f172a) !important;
+  color: white !important;
+  box-shadow: 0 12px 30px rgba(2, 6, 23, 0.25);
+}
+
+.app-title {
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: white;
+}
+
+.app-title span {
+  color: #38bdf8;
+}
+
+.active-link {
+  background: rgba(56, 189, 248, 0.15);
+  color: #7dd3fc !important;
+  border-radius: 999px;
+}
