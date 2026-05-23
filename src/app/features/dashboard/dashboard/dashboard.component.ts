@@ -28,6 +28,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DestroyRef, inject } from '@angular/core';
 import {AlertContextService} from '../../../core/services/alert-context.service';
 import {NotificationService} from '../../../core/services/notification.service';
+import {AuthService} from '../../../core/auth/auth.service';
 
 Chart.register(...registerables);
 
@@ -75,6 +76,7 @@ export class DashboardComponent implements OnInit {
     private maintenanceService: MaintenanceService,
     private alertContextService: AlertContextService,
     private notificationService: NotificationService,
+    public authService: AuthService,
   ) {}
 
   ngOnInit(): void {

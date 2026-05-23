@@ -67,6 +67,12 @@
     <button mat-button (click)="logout()">
       Logout
     </button>
+
+    <button mat-icon-button type="button" (click)="themeService.toggleTheme()">
+      <mat-icon>
+        {{ themeService.theme() === 'dark' ? 'light_mode' : 'dark_mode' }}
+      </mat-icon>
+    </button>
   </mat-toolbar>
 }
 

@@ -58,4 +58,20 @@ export class AuthService {
   isAuthenticated(): boolean {
     return !!this.getToken();
   }
+
+  canWrite(): boolean {
+    const role = this.currentUser()?.role;
+
+    return role === 'OWNER' || role === 'MANAGER';
+  }
+
+  isViewer(): boolean {
+    const role = this.currentUser()?.role;
+    return role === 'VIEWER';
+  }
+
+  isOwner(): boolean {
+    const role = this.currentUser()?.role;
+    return role === 'OWNER';
+  }
 }

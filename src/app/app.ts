@@ -8,6 +8,7 @@ import { AuthService } from './core/auth/auth.service';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { Alert } from './shared/models/alert.models';
+import {ThemeService} from './core/services/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -30,7 +31,8 @@ export class App {
     private authService: AuthService,
     private router: Router,
     public alertContextService: AlertContextService,
-    private fleetContextService: FleetContextService
+    private fleetContextService: FleetContextService,
+    public themeService: ThemeService
   ) {}
 
   ngOnInit(): void {

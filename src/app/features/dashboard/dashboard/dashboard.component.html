@@ -148,7 +148,7 @@
         <mat-card-title>Fleet AI Summary</mat-card-title>
 
         <div class="ai-actions">
-          <button
+          <button *ngIf="authService.canWrite()"
             mat-raised-button
             color="primary"
             type="button"
