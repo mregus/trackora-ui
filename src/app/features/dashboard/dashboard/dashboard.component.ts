@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatIconModule } from '@angular/material/icon';
 
 import { FleetService } from '../../../core/services/fleet.service';
 import { DashboardService } from '../../../core/services/dashboard.service';
@@ -29,6 +30,8 @@ import { DestroyRef, inject } from '@angular/core';
 import {AlertContextService} from '../../../core/services/alert-context.service';
 import {NotificationService} from '../../../core/services/notification.service';
 import {AuthService} from '../../../core/auth/auth.service';
+import {ActivityLog} from '../../../shared/models/activity-log';
+import {ActivityService} from '../../activity/activity';
 
 Chart.register(...registerables);
 
@@ -45,7 +48,8 @@ Chart.register(...registerables);
     MatSelectModule,
     MatFormFieldModule,
     BaseChartDirective,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatIconModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
@@ -64,7 +68,11 @@ export class DashboardComponent implements OnInit {
   generatingFleetInsight = signal(false);
   loadingOlderFleetInsights = signal(false);
 
+  activities = signal<ActivityLog[]>([]);
+
   private destroyRef = inject(DestroyRef);
+
+  private readonly activityService = inject(ActivityService);
 
   constructor(
     private fleetService: FleetService,
@@ -76,7 +84,7 @@ export class DashboardComponent implements OnInit {
     private maintenanceService: MaintenanceService,
     private alertContextService: AlertContextService,
     private notificationService: NotificationService,
-    public authService: AuthService,
+    public authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -182,6 +190,13 @@ export class DashboardComponent implements OnInit {
         this.loadFuelChart(fleetId);
         this.loadMaintenanceChart(fleetId);
         this.loadLatestFleetInsight(fleetId);
+
+        this.activityService
+          .getFleetActivity(fleetId)
+          .subscribe({
+            next: data => this.activities.set(data)
+          });
+
         this.loading.set(false);
       },
       error: err => {
@@ -253,6 +268,44 @@ export class DashboardComponent implements OnInit {
         this.notificationService.error(err?.error?.message ?? 'Unable to load older fleet AI insights.');
       }
     });
+  }
+
+  getActivityIcon(action: string): string {
+    switch (action) {
+      case 'FLEET_CREATED':
+        return 'business';
+
+      case 'VEHICLE_CREATED':
+      case 'VEHICLE_UPDATED':
+        return 'directions_car';
+
+      case 'MAINTENANCE_CREATED':
+        return 'build';
+
+      case 'MAINTENANCE_COMPLETED':
+        return 'check_circle';
+
+      case 'MAINTENANCE_CANCELLED':
+        return 'cancel';
+
+      case 'FUEL_LOG_CREATED':
+        return 'local_gas_station';
+
+      case 'ALERT_RESOLVED':
+        return 'notifications_active';
+
+      case 'DOCUMENT_UPLOADED':
+        return 'description';
+
+      case 'DOCUMENT_DELETED':
+        return 'delete';
+
+      case 'AI_SUMMARY_GENERATED':
+        return 'psychology';
+
+      default:
+        return 'history';
+    }
   }
 
   private updateVehicleStatusChart(summary: DashboardSummary): void {
@@ -374,6 +427,19 @@ export class DashboardComponent implements OnInit {
       labels: sorted.map(([date]) => date),
       values: sorted.map(([, cost]) => Number(cost.toFixed(2)))
     };
+  }
+
+  private loadActivity(fleetId: string): void {
+    this.activityService
+      .getFleetActivity(fleetId)
+      .subscribe({
+        next: activities => this.activities.set(activities)
+      });
+  }
+
+  private loadDashboard(fleetId: string): void {
+    this.loadDashboardSummary(fleetId);
+    this.loadActivity(fleetId);
   }
 
   refresh(): void {
