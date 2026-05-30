@@ -71,3 +71,68 @@ button[mat-icon-button] {
   color: #7dd3fc !important;
   border-radius: 999px;
 }
+
+.global-search {
+  position: relative;
+  width: min(420px, 100%);
+}
+
+.global-search input {
+  width: 100%;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 999px;
+  padding: 0.65rem 1rem;
+  outline: none;
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.global-search input:focus {
+  border-color: var(--trackora-blue);
+  box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.15);
+}
+
+.search-results {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: white;
+  border: 1px solid var(--trackora-border);
+  border-radius: 18px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.18);
+  overflow: hidden;
+}
+
+.search-section-title {
+  padding: 0.75rem 1rem 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--trackora-muted);
+  text-transform: uppercase;
+}
+
+.search-result {
+  width: 100%;
+  border: 0;
+  background: white;
+  text-align: left;
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.search-result:hover {
+  background: rgba(56, 189, 248, 0.08);
+}
+
+.search-result span,
+.search-empty {
+  color: var(--trackora-muted);
+  font-size: 0.85rem;
+}
+
+.search-empty {
+  padding: 1rem;
+}

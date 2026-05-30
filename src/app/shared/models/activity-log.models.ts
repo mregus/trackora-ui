@@ -1,4 +1,4 @@
-export interface ActivityLog {
+export interface ActivityLogModels {
   id: string;
   fleetId: string;
   vehicleId: string | null;

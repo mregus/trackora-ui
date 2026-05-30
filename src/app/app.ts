@@ -10,6 +10,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { Alert } from './shared/models/alert.models';
 import {ThemeService} from './core/services/theme.service';
 
+import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
+
+import { SearchService } from './core/services/search.service';
+import { SearchResponse } from './shared/models/search.models';
+import {DatePipe} from '@angular/common';
+
 @Component({
   selector: 'app-root',
   imports: [
@@ -19,7 +25,8 @@ import {ThemeService} from './core/services/theme.service';
     MatToolbarModule,
     MatButtonModule,
     MatMenuModule,
-    MatIconModule
+    MatIconModule,
+    DatePipe
   ],
   templateUrl: './app.html',
   styleUrl: './app.css'
@@ -27,13 +34,29 @@ import {ThemeService} from './core/services/theme.service';
 export class App {
   protected readonly title = signal('fleetwise-ui');
 
+  searchQuery = '';
+  searchResults: SearchResponse | null = null;
+  searchOpen = false;
+
+  private searchTerms = new Subject<string>();
+
   constructor(
     private authService: AuthService,
     private router: Router,
     public alertContextService: AlertContextService,
     private fleetContextService: FleetContextService,
-    public themeService: ThemeService
-  ) {}
+    public themeService: ThemeService,
+    private searchService: SearchService,
+  ) {
+    this.searchTerms.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(query => this.searchService.search(query))
+    ).subscribe(results => {
+      this.searchResults = results;
+      this.searchOpen = true;
+    });
+  }
 
   ngOnInit(): void {
     const fleetId = this.fleetContextService.selectedFleetId();
@@ -60,5 +83,33 @@ export class App {
     this.authService.logout();
     this.alertContextService.clear();
     this.router.navigate(['/login']);
+  }
+
+  onSearchChange(query: string): void {
+    this.searchQuery = query;
+
+    if (query.trim().length < 2) {
+      this.searchResults = null;
+      this.searchOpen = false;
+      return;
+    }
+
+    this.searchTerms.next(query.trim());
+  }
+
+  openVehicle(vehicleId: string): void {
+    this.searchOpen = false;
+    this.searchQuery = '';
+    this.searchResults = null;
+
+    this.router.navigate(['/vehicles', vehicleId]);
+  }
+
+  openSearchAlert(): void {
+    this.searchOpen = false;
+    this.searchQuery = '';
+    this.searchResults = null;
+
+    this.router.navigate(['/alerts']);
   }
 }

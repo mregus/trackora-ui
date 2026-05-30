@@ -33,6 +33,55 @@
       </a>
     </nav>
 
+    <div class="global-search">
+      <input
+        type="text"
+        placeholder="Search VIN, plate, vehicle..."
+        [value]="searchQuery"
+        (input)="onSearchChange($any($event.target).value)"
+      />
+
+      @if (searchOpen && searchResults) {
+        <div class="search-results">
+          @if (searchResults.vehicles.length > 0) {
+            <div class="search-section-title">Vehicles</div>
+
+            @for (vehicle of searchResults.vehicles; track vehicle.id) {
+              <button
+                type="button"
+                class="search-result"
+                (click)="openVehicle(vehicle.id)"
+              >
+                <strong>{{ vehicle.label }}</strong>
+                <span>
+                  {{ vehicle.licensePlate || 'No plate' }} · {{ vehicle.vin || 'No VIN' }}
+                </span>
+              </button>
+            }
+          } @else {
+            <div class="search-empty">No vehicle results found.</div>
+          }
+
+          @if (searchResults.alerts.length > 0) {
+            <div class="search-section-title">Alerts</div>
+
+            @for (alert of searchResults.alerts; track alert.id) {
+              <button
+                type="button"
+                class="search-result"
+                (click)="openSearchAlert()"
+              >
+                <strong>{{ alert.label }}</strong>
+                <span>
+                  {{ alert.resolved ? 'Resolved' : 'Open' }} · {{ alert.createdAt | date:'short' }}
+                </span>
+              </button>
+            }
+          }
+        </div>
+      }
+    </div>
+
     <span class="spacer"></span>
 
     <button mat-icon-button [matMenuTriggerFor]="alertsMenu">

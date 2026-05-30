@@ -30,7 +30,7 @@ import { DestroyRef, inject } from '@angular/core';
 import {AlertContextService} from '../../../core/services/alert-context.service';
 import {NotificationService} from '../../../core/services/notification.service';
 import {AuthService} from '../../../core/auth/auth.service';
-import {ActivityLog} from '../../../shared/models/activity-log';
+import {ActivityLogModels} from '../../../shared/models/activity-log.models';
 import {ActivityService} from '../../activity/activity';
 
 Chart.register(...registerables);
@@ -68,7 +68,7 @@ export class DashboardComponent implements OnInit {
   generatingFleetInsight = signal(false);
   loadingOlderFleetInsights = signal(false);
 
-  activities = signal<ActivityLog[]>([]);
+  activities = signal<ActivityLogModels[]>([]);
 
   private destroyRef = inject(DestroyRef);
 
