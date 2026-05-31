@@ -13,7 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { FleetService } from '../../../core/services/fleet.service';
 import { DashboardService } from '../../../core/services/dashboard.service';
 import { Fleet } from '../../../shared/models/fleet.models';
-import { DashboardSummary } from '../../../shared/models/dashboard.models';
+import {DashboardSummary, FleetHealthBreakdown, FleetRecommendation} from '../../../shared/models/dashboard.models';
 import { FleetContextService } from '../../../core/services/fleet-context.service';
 import { AiInsightService } from '../../../core/services/ai-insight.service';
 
@@ -69,6 +69,8 @@ export class DashboardComponent implements OnInit {
   loadingOlderFleetInsights = signal(false);
 
   activities = signal<ActivityLogModels[]>([]);
+
+  recommendations = signal<FleetRecommendation[]>([]);
 
   private destroyRef = inject(DestroyRef);
 
@@ -196,6 +198,12 @@ export class DashboardComponent implements OnInit {
           .subscribe({
             next: data => this.activities.set(data)
           });
+
+        this.dashboardService
+          .getRecommendations(fleetId)
+          .subscribe({
+          next: recommendations => this.recommendations.set(recommendations)
+        });
 
         this.loading.set(false);
       },
@@ -435,6 +443,51 @@ export class DashboardComponent implements OnInit {
       .subscribe({
         next: activities => this.activities.set(activities)
       });
+  }
+
+  getFleetHealthLabel(score: number): string {
+    if (score >= 90) {
+      return 'Excellent';
+    }
+
+    if (score >= 70) {
+      return 'Good';
+    }
+
+    if (score >= 50) {
+      return 'Needs Attention';
+    }
+
+    return 'Critical';
+  }
+
+  getFleetHealthClass(score: number): string {
+    if (score >= 90) {
+      return 'excellent';
+    }
+
+    if (score >= 70) {
+      return 'good';
+    }
+
+    if (score >= 50) {
+      return 'warning';
+    }
+
+    return 'critical';
+  }
+
+  getRecommendationIcon(type: string): string {
+    switch (type) {
+      case 'MAINTENANCE':
+        return 'build';
+      case 'ALERT':
+        return 'warning';
+      case 'HEALTH':
+        return 'monitor_heart';
+      default:
+        return 'tips_and_updates';
+    }
   }
 
   private loadDashboard(fleetId: string): void {

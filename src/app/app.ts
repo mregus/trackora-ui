@@ -15,6 +15,9 @@ import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
 import { SearchService } from './core/services/search.service';
 import { SearchResponse } from './shared/models/search.models';
 import {DatePipe} from '@angular/common';
+import {MatBadgeModule} from '@angular/material/badge';
+import {AppNotificationService} from './core/services/app-notification.service';
+import {AppNotification} from './shared/models/notification.models';
 
 @Component({
   selector: 'app-root',
@@ -26,7 +29,10 @@ import {DatePipe} from '@angular/common';
     MatButtonModule,
     MatMenuModule,
     MatIconModule,
-    DatePipe
+    DatePipe,
+    MatMenuModule,
+    MatBadgeModule,
+    MatIconModule
   ],
   templateUrl: './app.html',
   styleUrl: './app.css'
@@ -47,6 +53,7 @@ export class App {
     private fleetContextService: FleetContextService,
     public themeService: ThemeService,
     private searchService: SearchService,
+    public appNotificationService: AppNotificationService,
   ) {
     this.searchTerms.pipe(
       debounceTime(300),
@@ -60,6 +67,7 @@ export class App {
 
   ngOnInit(): void {
     const fleetId = this.fleetContextService.selectedFleetId();
+    this.appNotificationService.refresh();
 
     if (fleetId) {
       this.alertContextService.loadOpenAlertCount(fleetId);
@@ -111,5 +119,54 @@ export class App {
     this.searchResults = null;
 
     this.router.navigate(['/alerts']);
+  }
+
+  getNotificationIcon(type: string): string {
+    console.log(type);
+    switch (type) {
+      case 'MAINTENANCE_DUE':
+      case 'MAINTENANCE_OVERDUE':
+        return 'build';
+
+      case 'CRITICAL_ALERT':
+        return 'warning';
+
+      case 'AI_SUMMARY':
+        return 'psychology';
+
+      default:
+        return 'notifications';
+    }
+  }
+
+  openNotification(notification: AppNotification): void {
+    this.appNotificationService.markAsRead(notification.id);
+
+    const type = String(notification.type ?? '').trim().toUpperCase();
+
+    console.log(type);
+
+    switch (type) {
+      case 'MAINTENANCE_DUE':
+      case 'MAINTENANCE_OVERDUE':
+        this.router.navigate(['/maintenance']);
+        break;
+
+      case 'CRITICAL_ALERT':
+        this.router.navigate(['/alerts']);
+        break;
+
+      case 'AI_SUMMARY':
+        this.router.navigate(['/dashboard']);
+        break;
+
+      case 'AI_VEHICLE_SUMMARY':
+        this.router.navigate(['/vehicles']);
+        break;
+
+      default:
+        console.warn('Unknown notification type:', notification.type);
+        this.router.navigate(['/dashboard']);
+    }
   }
 }

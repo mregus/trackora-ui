@@ -136,3 +136,47 @@ button[mat-icon-button] {
 .search-empty {
   padding: 1rem;
 }
+
+.notifications-header {
+  width: 340px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notification-empty {
+  width: 340px;
+  padding: 1rem;
+  color: var(--trackora-muted);
+}
+
+.notification-item {
+  min-height: 76px;
+  width: 340px;
+}
+
+.notification-item.unread {
+  background: rgba(56, 189, 248, 0.1);
+}
+
+.notification-content {
+  display: grid;
+  gap: 0.15rem;
+  white-space: normal;
+  line-height: 1.25;
+}
+
+.notification-content strong {
+  font-size: 0.9rem;
+}
+
+.notification-content span {
+  color: var(--trackora-muted);
+  font-size: 0.8rem;
+}
+
+.notification-content small {
+  color: var(--trackora-muted);
+  font-size: 0.72rem;
+}

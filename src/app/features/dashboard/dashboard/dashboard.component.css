@@ -223,3 +223,127 @@ mat-card {
   font-size: 0.85rem;
   margin-top: 0.2rem;
 }
+
+.health-card {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.health-card.excellent {
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+}
+
+.health-card.good {
+  background: linear-gradient(135deg, #0ea5e9, #2563eb);
+}
+
+.health-card.warning {
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+}
+
+.health-card.critical {
+  background: linear-gradient(135deg, #dc2626, #991b1b);
+}
+
+.health-score {
+  font-size: 4rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.health-label {
+  margin-top: 0.5rem;
+  opacity: 0.9;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.health-status {
+  margin-top: 0.75rem;
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.health-breakdown {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.health-breakdown div {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 14px;
+  padding: 0.65rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.health-breakdown span {
+  display: block;
+  font-size: 0.75rem;
+  opacity: 0.85;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.health-breakdown strong {
+  margin-top: 0.25rem;
+  font-size: 1.2rem;
+}
+
+.recommendations-card {
+  margin-top: 1rem;
+}
+
+.recommendation-item {
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+  padding: 0.85rem;
+  border-radius: 16px;
+  margin-bottom: 0.75rem;
+  border: 1px solid var(--trackora-border);
+  background: #f8fafc;
+}
+
+.recommendation-item mat-icon {
+  margin-top: 0.1rem;
+}
+
+.recommendation-item strong {
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
+
+.recommendation-item p {
+  margin: 0.2rem 0 0;
+  color: var(--trackora-muted);
+}
+
+.recommendation-item.critical {
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.recommendation-item.warning {
+  background: #fffbeb;
+  color: #92400e;
+}
+
+.recommendation-item.info {
+  background: #eff6ff;
+  color: #1e40af;
+}

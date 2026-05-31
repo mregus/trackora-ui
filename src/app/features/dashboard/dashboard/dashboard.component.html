@@ -45,6 +45,44 @@
     </section>
 
     <section class="cards-grid">
+      <mat-card
+        class="health-card"
+        [class]="getFleetHealthClass(dashboard.fleetHealthScore)">
+        <mat-card-content>
+          <div class="health-score">
+            {{ dashboard.fleetHealthScore }}
+          </div>
+          <div class="health-label">
+            Fleet Health Score
+          </div>
+          <div class="health-status">
+            {{ getFleetHealthLabel(dashboard.fleetHealthScore) }}
+          </div>
+
+          <div class="health-breakdown">
+            <div>
+              <span>Critical alerts</span>
+              <strong>{{ dashboard.fleetHealthBreakdown.criticalAlerts }}</strong>
+            </div>
+
+            <div>
+              <span>Warning alerts</span>
+              <strong>{{ dashboard.fleetHealthBreakdown.warningAlerts }}</strong>
+            </div>
+
+            <div>
+              <span>Overdue maintenance</span>
+              <strong>{{ dashboard.fleetHealthBreakdown.overdueMaintenance }}</strong>
+            </div>
+
+            <div>
+              <span>Due soon</span>
+              <strong>{{ dashboard.fleetHealthBreakdown.maintenanceDueSoon }}</strong>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
       <mat-card>
         <mat-card-title>Total Vehicles</mat-card-title>
         <mat-card-content>
@@ -206,6 +244,29 @@
             </div>
           } @else {
             <p>No older fleet summaries found.</p>
+          }
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="recommendations-card">
+      <mat-card-header>
+        <mat-card-title>Recommendations</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        @if (recommendations().length === 0) {
+          <p class="subtext">No recommendations right now. Fleet looks stable.</p>
+        } @else {
+          @for (recommendation of recommendations(); track recommendation.message) {
+            <div class="recommendation-item" [class]="recommendation.severity.toLowerCase()">
+              <mat-icon>{{ getRecommendationIcon(recommendation.type) }}</mat-icon>
+
+              <div>
+                <strong>{{ recommendation.type }}</strong>
+                <p>{{ recommendation.message }}</p>
+              </div>
+            </div>
           }
         }
       </mat-card-content>
