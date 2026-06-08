@@ -120,3 +120,98 @@
   --mdc-snackbar-container-color: #2563eb;
   --mdc-snackbar-supporting-text-color: white;
 }
+
+.members-list {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.member-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 0.75rem;
+  align-items: center;
+
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--trackora-border);
+  border-radius: 16px;
+  background: #f8fafc;
+}
+
+.member-info {
+  min-width: 0;
+  display: grid;
+  gap: 0.2rem;
+}
+
+.member-info strong,
+.member-info span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.member-info span {
+  color: var(--trackora-muted);
+  font-size: 0.9rem;
+}
+
+.remove-member-button {
+  min-width: 92px;
+}
+
+@media (max-width: 700px) {
+  .member-row {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .role-badge,
+  .remove-member-button {
+    justify-self: start;
+  }
+}
+
+.invitations-section {
+  margin-top: 1.5rem;
+}
+
+.invitation-list {
+  display: grid;
+  gap: 0.75rem;
+  justify-content: start;
+}
+
+.invitation-row {
+  width: fit-content;
+  min-width: 520px;
+  max-width: 720px;
+
+  display: grid !important;
+  grid-template-columns: 260px auto !important;
+  align-items: center;
+  gap: 1rem;
+
+  padding: 1rem;
+  border: 1px dashed var(--trackora-border);
+  border-radius: 16px;
+  background: #fff7ed;
+}
+
+.invitation-right {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  width: auto !important;
+}
+
+@media (max-width: 768px) {
+  .invitation-row {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    grid-template-columns: 1fr !important;
+  }
+}

@@ -100,6 +100,98 @@
       </mat-card>
     </section>
 
+    <mat-card class="telematics-card">
+      <mat-card-header>
+        <mat-card-title>Live Telematics</mat-card-title>
+        <mat-card-subtitle>
+          Latest vehicle telemetry snapshot
+        </mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        @if (latestTelematics(); as telemetry) {
+          <div class="telematics-grid">
+            <div>
+              <span>Speed</span>
+              <strong>{{ telemetry.speedMph ?? 0 }} mph</strong>
+            </div>
+
+            <div
+              class="telemetry-stat"
+              [class.warning]="(telemetry.fuelLevelPercent ?? 100) < 25"
+              [class.danger]="(telemetry.fuelLevelPercent ?? 100) < 15"
+            >
+              <span>Fuel</span>
+              <strong>{{ telemetry.fuelLevelPercent ?? 0 }}%</strong>
+            </div>
+
+            <div
+              class="telemetry-stat"
+              [class.danger]="(telemetry.engineTempF ?? 0) > 230"
+            >
+              <span>Engine Temp</span>
+              <strong>{{ telemetry.engineTempF ?? 0 }}°F</strong>
+            </div>
+
+            <div
+              class="telemetry-stat"
+              [class.warning]="(telemetry.batteryVoltage ?? 12.6) < 12"
+              [class.danger]="(telemetry.batteryVoltage ?? 12.6) < 11.8"
+            >
+              <span>Battery</span>
+              <strong>{{ telemetry.batteryVoltage ?? 0 }}V</strong>
+            </div>
+
+            <div>
+              <span>Odometer</span>
+              <strong>{{ telemetry.odometerMiles ?? 0 }} mi</strong>
+            </div>
+
+            <div>
+              <span>Idle</span>
+              <strong>{{ telemetry.idleMinutes }} min</strong>
+            </div>
+
+            <div
+              class="telemetry-stat"
+              [class.danger]="telemetry.checkEngine"
+            >
+              <span>Check Engine</span>
+              <strong>
+                {{ telemetry.checkEngine ? 'ACTIVE' : 'OK' }}
+              </strong>
+            </div>
+
+            <div>
+              <span>Last Reported</span>
+              <strong>{{ telemetry.recordedAt | date:'short' }}</strong>
+            </div>
+          </div>
+        } @else {
+          <p class="subtext">No telematics data reported for this vehicle yet.</p>
+        }
+      </mat-card-content>
+
+      <!--   remove this after the data simulation for telematics is removed   -->
+      <mat-card-header>
+        <mat-card-title>Live Telematics</mat-card-title>
+        <mat-card-subtitle>
+          Latest vehicle telemetry snapshot
+        </mat-card-subtitle>
+
+        <button
+          mat-stroked-button
+          type="button"
+          class="simulate-button"
+          (click)="simulateTelematicsEvent()"
+        >
+          Simulate Event
+        </button>
+      </mat-card-header>
+      <!--   end   -->
+
+    </mat-card>
+
     <mat-card class="edit-vehicle-card">
       <div class="edit-card-header">
         <mat-card-title>Vehicle Assignment</mat-card-title>

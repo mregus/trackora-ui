@@ -274,3 +274,81 @@ mat-card {
 .doc-links button {
   justify-content: flex-start;
 }
+
+.telematics-card {
+  margin-top: 1rem;
+}
+
+.telematics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(120px, 1fr));
+  gap: 0.85rem;
+}
+
+.telematics-grid div {
+  border: 1px solid var(--trackora-border);
+  border-radius: 16px;
+  padding: 0.85rem;
+  background: #f8fafc;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.telematics-grid span {
+  color: var(--trackora-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.telematics-grid strong {
+  font-size: 1.05rem;
+}
+
+@media (max-width: 900px) {
+  .telematics-grid {
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .telematics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.telemetry-stat {
+  border: 1px solid var(--trackora-border);
+  border-radius: 16px;
+  padding: 0.85rem;
+  background: #f8fafc;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.telemetry-stat.warning {
+  background: #fffbeb;
+  border-color: #f59e0b;
+}
+
+.telemetry-stat.danger {
+  background: #fef2f2;
+  border-color: #dc2626;
+}
+
+.telemetry-stat.warning strong {
+  color: #b45309;
+}
+
+.telemetry-stat.danger strong {
+  color: #b91c1c;
+}
+
+/* remove these after removing the telematic simulation */
+.telematics-card mat-card-header {
+  display: flex;
+  align-items: center;
+}
+
+.simulate-button {
+  margin-left: auto;
+}

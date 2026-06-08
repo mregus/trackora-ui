@@ -88,5 +88,132 @@
         }
       </mat-card-content>
     </mat-card>
+
+    <mat-card class="members-card">
+      <mat-card-header>
+        <mat-card-title>Fleet Members</mat-card-title>
+        <mat-card-subtitle>
+          Invite managers and viewers to collaborate on this fleet.
+        </mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="member-form">
+          <mat-form-field appearance="outline" class="member-email-field">
+            <mat-label>Email</mat-label>
+            <input
+              matInput
+              type="email"
+              placeholder="manager@trackora.com"
+              [value]="memberEmail()"
+              (input)="memberEmail.set($any($event.target).value)"
+            />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="member-role-field">
+            <mat-label>Role</mat-label>
+            <mat-select
+              [value]="memberRole()"
+              (selectionChange)="memberRole.set($event.value)"
+            >
+              <mat-option value="MANAGER">Manager</mat-option>
+              <mat-option value="VIEWER">Viewer</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            class="member-add-button"
+            [disabled]="!selectedFleetId()"
+            (click)="inviteMember()"
+          >
+            Send Invite
+          </button>
+        </div>
+
+        @if (members().length === 0) {
+          <p class="subtext">No additional members yet.</p>
+        } @else {
+          <div class="members-list">
+            @for (member of members(); track member.id) {
+              <div class="member-row">
+                <div class="member-info">
+                  <strong>{{ member.firstName }} {{ member.lastName }}</strong>
+                  <span>{{ member.email }}</span>
+                </div>
+
+                <span class="role-badge" [class]="member.role.toLowerCase()">
+                  {{ member.role }}
+                </span>
+
+                @if (member.role !== 'OWNER') {
+                  <button
+                    mat-stroked-button
+                    color="warn"
+                    type="button"
+                    class="remove-member-button"
+                    (click)="removeMember(member.id)"
+                  >
+                    Remove
+                  </button>
+                }
+              </div>
+            }
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+  </section>
+
+  <section class="invitations-section">
+    <h3>Pending Invitations</h3>
+
+    @if (invitations().length === 0) {
+      <p class="subtext">No pending invitations.</p>
+    } @else {
+      <div class="invitation-list">
+        @for (invitation of invitations(); track invitation.id) {
+          @if (!invitation.accepted) {
+            <div class="invitation-row">
+              <div class="invitation-info">
+                <strong>{{ invitation.email }}</strong>
+                <span>
+                  Expires {{ invitation.expiresAt | date:'mediumDate' }}
+                </span>
+              </div>
+
+              <div class="invitation-right">
+                <span
+                  class="role-badge"
+                  [class]="invitation.role.toLowerCase()">
+                  {{ invitation.role }}
+                </span>
+
+                <div class="invitation-actions">
+                  <button
+                    mat-stroked-button
+                    type="button"
+                    (click)="resendInvitation(invitation.id)"
+                  >
+                    Resend
+                  </button>
+
+                  <button
+                    mat-stroked-button
+                    color="warn"
+                    type="button"
+                    (click)="cancelInvitation(invitation.id)"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    }
   </section>
 </div>

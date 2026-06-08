@@ -41,6 +41,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {NotificationService} from '../../../core/services/notification.service';
+import {TelematicsEvent} from '../../../shared/models/telematics.models';
+import {TelematicsService} from '../../../core/services/telematics.service';
 
 @Component({
   selector: 'app-vehicle-details',
@@ -89,6 +91,7 @@ export class VehicleDetailsComponent implements OnInit {
   maintenanceDocuments = signal<Record<string, VehicleDocument[]>>({});
   uploadingMaintenanceDocument = signal<string | null>(null);
   selectedDocumentType = signal('GENERAL');
+  latestTelematics = signal<TelematicsEvent | null>(null);
 
   documentTypes = [
     'GENERAL',
@@ -153,7 +156,8 @@ export class VehicleDetailsComponent implements OnInit {
     private fleetContextService: FleetContextService,
     private alertContextService: AlertContextService,
     private vehicleDocumentService: VehicleDocumentService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private telematicsService: TelematicsService
   ) {
     this.vehicleForm = this.fb.nonNullable.group({
       fleetId: ['', [Validators.required]],
@@ -171,6 +175,13 @@ export class VehicleDetailsComponent implements OnInit {
     }
 
     this.loadVehicle(vehicleId);
+  }
+
+  loadLatestTelematics(vehicleId: string): void {
+    this.telematicsService.getLatestForVehicle(vehicleId).subscribe({
+      next: data => this.latestTelematics.set(data),
+      error: () => this.latestTelematics.set(null)
+    });
   }
 
   canSetStatus(status: VehicleStatus): boolean {
@@ -192,6 +203,7 @@ export class VehicleDetailsComponent implements OnInit {
         this.loadFleets();
         this.patchVehicleForm(vehicle);
         this.loadDocuments(vehicle.id);
+        this.loadLatestTelematics(vehicle.id);
 
         this.loading.set(false);
       },
@@ -654,6 +666,43 @@ export class VehicleDetailsComponent implements OnInit {
         this.uploadingMaintenanceDocument.set(null);
         // this.errorMessage.set('Unable to upload maintenance document.');
         this.notificationService.error(err?.error?.message ?? 'Unable to upload maintenance document.');
+      }
+    });
+  }
+
+  // remove this later (used to simulate telematics data)
+  simulateTelematicsEvent(): void {
+    const vehicleId = this.vehicle()?.id; // replace if your vehicle id variable is different
+
+    if (!vehicleId) {
+      this.notificationService.error('No vehicle selected.');
+      return;
+    }
+
+    const event = {
+      vehicleId,
+      recordedAt: new Date().toISOString(),
+      latitude: 28.5383 + (Math.random() - 0.5) / 100,
+      longitude: -81.3792 + (Math.random() - 0.5) / 100,
+      speedMph: Math.floor(35 + Math.random() * 70),
+      odometerMiles: Math.floor(110000 + Math.random() * 5000),
+      fuelLevelPercent: Math.floor(5 + Math.random() * 90),
+      engineTempF: Math.floor(185 + Math.random() * 75),
+      batteryVoltage: Number((11.2 + Math.random() * 1.8).toFixed(1)),
+      checkEngine: Math.random() > 0.8,
+      harshBraking: Math.random() > 0.75,
+      idleMinutes: Math.floor(Math.random() * 60)
+    };
+
+    this.telematicsService.createEvent(event).subscribe({
+      next: telemetry => {
+        this.latestTelematics.set(telemetry);
+        this.notificationService.success('Telematics event generated.');
+      },
+      error: err => {
+        this.notificationService.error(
+          err?.error?.message ?? 'Unable to generate telematics event.'
+        );
       }
     });
   }
