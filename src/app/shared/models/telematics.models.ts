@@ -16,3 +16,17 @@ export interface TelematicsEvent {
   harshBraking: boolean;
   idleMinutes: number;
 }
+
+export interface TelematicsDevice {
+  id: string;
+  vehicleId: string;
+  provider: string;
+  externalDeviceId: string;
+  serialNumber: string | null;
+  imei: string | null;
+  vin: string | null;
+  active: boolean;
+  lastSeenAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}

@@ -1,0 +1,59 @@
+<section class="geometris-page">
+  <div class="page-header">
+    <div>
+      <h1>Geometris Packets</h1>
+      <p>Monitor raw Geometris packet ingestion and parser status.</p>
+    </div>
+
+    <div class="actions">
+      <button mat-stroked-button type="button" (click)="loadLatest()">
+        <mat-icon>refresh</mat-icon>
+        Latest
+      </button>
+
+      <button mat-stroked-button color="warn" type="button" (click)="loadFailed()">
+        <mat-icon>error</mat-icon>
+        Failed
+      </button>
+    </div>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      @if (loading()) {
+        <p class="subtext">Loading packets...</p>
+      } @else if (packets().length === 0) {
+        <p class="subtext">No packets found.</p>
+      } @else {
+        <div class="packet-list">
+          @for (packet of packets(); track packet.id) {
+            <div
+              class="packet-row"
+              [class.success]="packet.parsedSuccessfully"
+              [class.failed]="!packet.parsedSuccessfully"
+            >
+              <div>
+                <strong>{{ packet.serialNumber || 'Unknown device' }}</strong>
+                <span>{{ packet.reasonText || 'Unknown reason' }}</span>
+              </div>
+
+              <span class="status-pill">
+                {{ packet.parsedSuccessfully ? 'Parsed' : 'Failed' }}
+              </span>
+
+              <span class="received-at">
+                {{ packet.receivedAt | date:'short' }}
+              </span>
+
+              @if (packet.errorMessage) {
+                <p class="error-message">
+                  {{ packet.errorMessage }}
+                </p>
+              }
+            </div>
+          }
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</section>

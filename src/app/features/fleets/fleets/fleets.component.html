@@ -83,6 +83,13 @@
                   <mat-icon>check_circle</mat-icon>
                 }
               </button>
+              <button
+                mat-raised-button
+                color="primary"
+                [routerLink]="['/fleets', selectedFleetId(), 'map']"
+              >
+                Fleet Map
+              </button>
             }
           </div>
         }

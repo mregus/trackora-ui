@@ -1,0 +1,95 @@
+.fleet-map-page {
+  padding: 1rem;
+}
+
+#fleet-map {
+  height: 650px;
+  width: 100%;
+  border-radius: 16px;
+}
+
+.vehicle-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.vehicle-icon {
+  display: inline-block;
+  font-size: 30px;
+  line-height: 30px;
+
+  text-shadow:
+    0 0 2px white,
+    0 0 4px white,
+    0 0 8px white;
+}
+
+.fleet-map-page {
+  position: relative;
+}
+
+.map-legend {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+
+  background: white;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.12);
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  font-size: 0.875rem;
+}
+
+.legend-color {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+}
+
+.legend-color.moving {
+  background: #2563eb;
+}
+
+.legend-color.low-fuel {
+  background: #f59e0b;
+}
+
+.legend-color.check-engine {
+  background: #dc2626;
+}
+
+.legend-color.offline {
+  background: #64748b;
+}
+
+.legend-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.legend-summary strong {
+  font-size: 1.25rem;
+}
+
+.legend-summary span {
+  color: #64748b;
+  font-size: 0.85rem;
+}

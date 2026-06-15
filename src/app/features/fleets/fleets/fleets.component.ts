@@ -19,6 +19,7 @@ import {FleetMemberService} from '../../../core/services/fleet-member.service';
 import {MatOption, MatSelect} from '@angular/material/select';
 import {FleetInvitation} from '../../../shared/models/fleet-invitation.models';
 import {FleetInvitationService} from '../../../core/services/fleet-invitation.service';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-fleets',
@@ -35,7 +36,8 @@ import {FleetInvitationService} from '../../../core/services/fleet-invitation.se
     MatIconModule,
     MatSnackBarModule,
     MatSelect,
-    MatOption
+    MatOption,
+    RouterLink
   ],
   templateUrl: './fleets.component.html',
   styleUrl: './fleets.component.css'

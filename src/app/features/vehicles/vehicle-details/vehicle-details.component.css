@@ -343,6 +343,52 @@ mat-card {
   color: #b91c1c;
 }
 
+.device-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.device-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.device-stat span {
+  font-size: 0.8rem;
+  color: var(--trackora-muted);
+}
+
+.device-stat strong {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.device-status {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+}
+
+.device-status.online {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.device-status.stale {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.device-status.offline {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
 /* remove these after removing the telematic simulation */
 .telematics-card mat-card-header {
   display: flex;

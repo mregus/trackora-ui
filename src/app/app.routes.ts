@@ -76,6 +76,19 @@ export const routes: Routes = [
         .then(m => m.AlertsComponent)
   },
   {
+    path: 'admin/geometris-packets',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/telematics/telematics/geometris-packets/geometris-packets')
+        .then(m => m.GeometrisPackets)
+  },
+  {
+    path: 'fleets/:fleetId/map',
+    loadComponent: () =>
+      import('./features/telematics/telematics/fleet-map/fleet-map')
+        .then(m => m.FleetMapComponent)
+  },
+  {
     path: '',
     pathMatch: 'full',
     redirectTo: 'dashboard'

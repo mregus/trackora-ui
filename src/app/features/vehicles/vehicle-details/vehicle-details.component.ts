@@ -41,7 +41,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {NotificationService} from '../../../core/services/notification.service';
-import {TelematicsEvent} from '../../../shared/models/telematics.models';
+import {TelematicsDevice, TelematicsEvent} from '../../../shared/models/telematics.models';
 import {TelematicsService} from '../../../core/services/telematics.service';
 
 @Component({
@@ -92,6 +92,7 @@ export class VehicleDetailsComponent implements OnInit {
   uploadingMaintenanceDocument = signal<string | null>(null);
   selectedDocumentType = signal('GENERAL');
   latestTelematics = signal<TelematicsEvent | null>(null);
+  device = signal<TelematicsDevice | null>(null);
 
   documentTypes = [
     'GENERAL',
@@ -177,6 +178,17 @@ export class VehicleDetailsComponent implements OnInit {
     this.loadVehicle(vehicleId);
   }
 
+  loadTelematicsDevice(vehicleId: string): void {
+    this.telematicsService.getDevicesForVehicle(vehicleId).subscribe({
+      next: devices => {
+        this.device.set(devices[0] ?? null);
+      },
+      error: () => {
+        this.device.set(null);
+      }
+    });
+  }
+
   loadLatestTelematics(vehicleId: string): void {
     this.telematicsService.getLatestForVehicle(vehicleId).subscribe({
       next: data => this.latestTelematics.set(data),
@@ -204,6 +216,7 @@ export class VehicleDetailsComponent implements OnInit {
         this.patchVehicleForm(vehicle);
         this.loadDocuments(vehicle.id);
         this.loadLatestTelematics(vehicle.id);
+        this.loadTelematicsDevice(vehicleId);
 
         this.loading.set(false);
       },
@@ -668,6 +681,31 @@ export class VehicleDetailsComponent implements OnInit {
         this.notificationService.error(err?.error?.message ?? 'Unable to upload maintenance document.');
       }
     });
+  }
+
+  getDeviceStatus(): 'ONLINE' | 'STALE' | 'OFFLINE' {
+    const device = this.device();
+
+    if (!device?.lastSeenAt) {
+      return 'OFFLINE';
+    }
+
+    const lastSeen = new Date(device.lastSeenAt).getTime();
+    const minutesAgo = (Date.now() - lastSeen) / 1000 / 60;
+
+    if (minutesAgo <= 10) {
+      return 'ONLINE';
+    }
+
+    if (minutesAgo <= 60) {
+      return 'STALE';
+    }
+
+    return 'OFFLINE';
+  }
+
+  getDeviceStatusClass(): string {
+    return this.getDeviceStatus().toLowerCase();
   }
 
   // remove this later (used to simulate telematics data)
