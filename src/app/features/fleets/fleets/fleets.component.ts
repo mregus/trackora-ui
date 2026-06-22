@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -20,6 +20,7 @@ import {MatOption, MatSelect} from '@angular/material/select';
 import {FleetInvitation} from '../../../shared/models/fleet-invitation.models';
 import {FleetInvitationService} from '../../../core/services/fleet-invitation.service';
 import {RouterLink} from '@angular/router';
+import {FleetLiveLocationService} from '../../../core/services/fleet-live-location.service';
 
 @Component({
   selector: 'app-fleets',
@@ -58,6 +59,8 @@ export class FleetsComponent implements OnInit {
   loadingMembers = signal(false);
   invitations = signal<FleetInvitation[]>([]);
 
+  private readonly liveLocationService = inject(FleetLiveLocationService);
+
   constructor(
     private fb: FormBuilder,
     private fleetService: FleetService,
@@ -91,11 +94,12 @@ export class FleetsComponent implements OnInit {
 
         if (selectedFleet) {
           this.loadMembers(selectedFleet.id);
+          this.loadInvitations(selectedFleet.id);
           this.fleetContextService.setSelectedFleetId(selectedFleet.id);
         }
 
-        this.loadMembers(selectedFleet.id);
-        this.loadInvitations(selectedFleet.id);
+        // this.loadMembers(selectedFleet.id);
+        // this.loadInvitations(selectedFleet.id);
 
         this.loading.set(false);
       },

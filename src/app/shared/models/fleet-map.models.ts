@@ -10,3 +10,44 @@ export interface FleetTelematicsLocation {
   headingDegrees: number | null;
   recordedAt: string;
 }
+
+export interface LiveVehicleLocationEvent {
+  vehicleId: string;
+  fleetId: string;
+  vehicleName: string;
+  licensePlate: string | null;
+  latitude: number;
+  longitude: number;
+  speedMph: number | null;
+  headingDegrees: number | null;
+  fuelLevelPercent: number | null;
+  checkEngine: boolean;
+  recordedAt: string;
+}
+
+export interface TelematicsHistoryPoint {
+  latitude: number | null;
+  longitude: number | null;
+  speedMph: number | null;
+  recordedAt: string;
+  vehicleId: string;
+  make: string;
+  model: string;
+  licensePlate: string;
+}
+
+export interface VehicleTrip {
+  startTime: string;
+  endTime: string;
+  pointCount: number;
+  maxSpeedMph: number;
+  avgSpeedMph: number;
+}
+
+export interface PageResponse<T> {
+  content: T[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+}

@@ -93,3 +93,86 @@
   color: #64748b;
   font-size: 0.85rem;
 }
+
+.history-controls {
+  display: flex;
+  gap: 1rem;
+  align-items: end;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.history-controls label {
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.history-controls input {
+  padding: 0.45rem 0.6rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+}
+
+.playback-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.playback-icon {
+  color: #16a34a;
+  font-size: 32px;
+  text-shadow:
+    0 0 2px white,
+    0 0 4px white,
+    0 0 8px white;
+}
+
+.trips-panel {
+  position: absolute;
+  left: 1rem;
+  top: 12rem;
+  z-index: 1000;
+  width: 320px;
+  max-height: 420px;
+  background: white;
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18);
+}
+
+.trips-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: .75rem;
+}
+
+.trips-list {
+  display: grid;
+  gap: .5rem;
+  max-height: 340px;
+  overflow-y: auto;
+}
+
+.trip-row {
+  text-align: left;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: .75rem;
+  background: #fff;
+  cursor: pointer;
+}
+
+.trip-row:hover,
+.trip-row.selected {
+  background: #eef2ff;
+  border-color: #2563eb;
+}
+
+.trip-row strong,
+.trip-row span,
+.trip-row small {
+  display: block;
+}
