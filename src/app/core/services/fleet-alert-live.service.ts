@@ -2,6 +2,7 @@ import {Client} from '@stomp/stompjs';
 import {Injectable} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {LiveAlertEvent} from '../../shared/models/telematics.models';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class FleetAlertLiveService {
     }
 
     this.stompClient = new Client({
-      brokerURL: 'ws://localhost:8080/ws',
+      brokerURL: this.getWebSocketUrl(),
       reconnectDelay: 5000
     });
 
@@ -39,5 +40,9 @@ export class FleetAlertLiveService {
     };
 
     this.stompClient.activate();
+  }
+
+  private getWebSocketUrl(): string {
+    return environment.wsBaseUrl;
   }
 }
