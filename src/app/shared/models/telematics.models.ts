@@ -30,3 +30,15 @@ export interface TelematicsDevice {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface LiveAlertEvent {
+  alertId: string;
+  fleetId: string;
+  vehicleId: string;
+  vehicleName: string;
+  licensePlate: string;
+  type: string;
+  severity: string;
+  message: string;
+  createdAt: string;
+}

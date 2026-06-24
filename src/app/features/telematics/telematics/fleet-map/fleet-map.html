@@ -53,65 +53,124 @@
     </button>
   </div>
 
-  @if (trips().length > 0) {
-    <aside class="trips-panel">
-      <div class="trips-panel-header">
-        <h3>Trips</h3>
-        <span>{{ trips().length }} found</span>
-      </div>
+  <div class="map-container">
 
-      <div class="trips-list">
-        @for (trip of trips(); track trip.startTime) {
-          <button
-            type="button"
-            class="trip-row"
-            [class.selected]="selectedTrip()?.startTime === trip.startTime"
-            (click)="showTrip(trip)"
-          >
-            <strong>{{ trip.startTime | date:'shortTime' }} - {{ trip.endTime | date:'shortTime' }}</strong>
-            <span>{{ trip.pointCount }} points</span>
+    @if (trips().length > 0) {
+      <aside class="trips-panel">
+        <div class="trips-panel-header">
+          <h3>Trips</h3>
+
+          <div class="panel-header-actions">
+            <span>{{ trips().length }} found</span>
+
+            <button type="button" class="panel-close" (click)="closeTripsPanel()">
+              ×
+            </button>
+          </div>
+        </div>
+
+        <div class="trips-list">
+          @for (trip of trips(); track trip.startTime) {
+            <button
+              type="button"
+              class="trip-row"
+              [class.selected]="selectedTrip()?.startTime === trip.startTime"
+              (click)="showTrip(trip)"
+            >
+              <strong>{{ trip.startTime | date:'shortTime' }} - {{ trip.endTime | date:'shortTime' }}</strong>
+              <span>{{ trip.pointCount }} points</span>
+              <small>
+                Max {{ trip.maxSpeedMph | number:'1.0-0' }} mph ·
+                Avg {{ trip.avgSpeedMph | number:'1.0-0' }} mph
+              </small>
+            </button>
+
+            <div class="trip-stats">
+              {{ formatDuration(trip.durationMinutes) }}
+              ·
+              {{ trip.distanceMiles | number:'1.1-1' }} mi
+            </div>
+
             <small>
               Max {{ trip.maxSpeedMph | number:'1.0-0' }} mph ·
               Avg {{ trip.avgSpeedMph | number:'1.0-0' }} mph
             </small>
+          }
+          <button
+            mat-stroked-button
+            (click)="previousTripsPage()"
+            [disabled]="tripPage() === 0">
+            Previous
           </button>
+
+          <span>
+            Page {{ tripPage() + 1 }} of {{ tripTotalPages() }}
+          </span>
+
+          <button
+            mat-stroked-button
+            (click)="nextTripsPage()"
+            [disabled]="tripPage() >= tripTotalPages() - 1">
+            Next
+          </button>
+        </div>
+      </aside>
+    }
+
+    @if (alerts().length > 0) {
+      <aside class="alerts-panel">
+        <div class="alerts-panel-header">
+          <h3>Live Alerts</h3>
+
+          <button type="button" class="panel-close" (click)="clearLiveAlerts()">
+            ×
+          </button>
+        </div>
+        @for (alert of alerts(); track alert.createdAt + alert.vehicleId + alert.type) {
+          <div
+            class="alert-card"
+            [class.critical]="alert.severity === 'CRITICAL'">
+            <strong>
+              {{ alert.vehicleName }}
+            </strong>
+            <div>
+              {{ alert.message }}
+            </div>
+            <small>
+              {{ alert.createdAt | date:'short' }}
+            </small>
+          </div>
         }
-        <button
-          mat-stroked-button
-          (click)="previousTripsPage()"
-          [disabled]="tripPage() === 0">
-          Previous
-        </button>
+      </aside>
+    }
 
-        <span>
-          Page {{ tripPage() + 1 }} of {{ tripTotalPages() }}
-        </span>
+    <div class="trip-debug">
+      Trips: {{ trips().length }}
+      Page: {{ tripPage() + 1 }} / {{ tripTotalPages() }}
+    </div>
 
-        <button
-          mat-stroked-button
-          (click)="nextTripsPage()"
-          [disabled]="tripPage() >= tripTotalPages() - 1">
-          Next
-        </button>
-      </div>
-    </aside>
-  }
+    <button mat-raised-button type="button" (click)="playTrip()">
+      Play Trip
+    </button>
 
-  <div class="trip-debug">
-    Trips: {{ trips().length }}
-    Page: {{ tripPage() + 1 }} / {{ tripTotalPages() }}
+    <button mat-stroked-button type="button" (click)="stopTripPlayback()">
+      Stop
+    </button>
+
+    <button mat-stroked-button (click)="loadToday()">
+      Today
+    </button>
+
+    <button mat-stroked-button (click)="loadLast7Days()">
+      Last 7 Days
+    </button>
+
+    <button mat-stroked-button (click)="loadLast30Days()">
+      Last 30 Days
+    </button>
+
+    <div id="fleet-map"></div>
   </div>
-
-  <button mat-raised-button type="button" (click)="playTrip()">
-    Play Trip
-  </button>
-
-  <button mat-stroked-button type="button" (click)="stopTripPlayback()">
-    Stop
-  </button>
-
-  <div id="fleet-map"></div>
-
 <!--  <div id="fleet-map"></div>-->
 
 </section>

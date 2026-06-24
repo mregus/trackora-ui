@@ -42,6 +42,8 @@ export interface VehicleTrip {
   pointCount: number;
   maxSpeedMph: number;
   avgSpeedMph: number;
+  durationMinutes: number;
+  distanceMiles: number;
 }
 
 export interface PageResponse<T> {

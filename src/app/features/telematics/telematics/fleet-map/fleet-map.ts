@@ -20,6 +20,8 @@ import {
 import {FleetLiveLocationService} from '../../../../core/services/fleet-live-location.service';
 import {MatButton} from '@angular/material/button';
 import {DatePipe, DecimalPipe, NgIf} from '@angular/common';
+import {LiveAlertEvent} from '../../../../shared/models/telematics.models';
+import {FleetAlertLiveService} from '../../../../core/services/fleet-alert-live.service';
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
@@ -51,6 +53,7 @@ export class FleetMapComponent implements AfterViewInit {
   private markersLayer = L.layerGroup();
   private readonly liveLocationService = inject(FleetLiveLocationService);
   private routeLayer = L.layerGroup();
+  private readonly alertLiveService = inject(FleetAlertLiveService)
 
   private playbackMarker?: L.Marker;
   private playbackTimer?: ReturnType<typeof setInterval>;
@@ -73,6 +76,8 @@ export class FleetMapComponent implements AfterViewInit {
   tripPage = signal(0);
   tripTotalPages = signal(0);
 
+  alerts = signal<LiveAlertEvent[]>([]);
+
   ngAfterViewInit(): void {
     this.initializeMap();
 
@@ -84,6 +89,21 @@ export class FleetMapComponent implements AfterViewInit {
       timer(0, 30000)
         .pipe(takeUntil(this.destroy$))
         .subscribe(() => this.loadFleet(this.fleetId));
+
+      this.alertLiveService.connect(this.fleetId);
+
+      this.alertLiveService
+        .stream()
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(alert => {
+
+          console.log('Live alert received:', alert);
+
+          this.alerts.update(current => [
+            alert,
+            ...current
+          ].slice(0, 50));
+        });
     }
 
     this.liveLocationService
@@ -112,6 +132,18 @@ export class FleetMapComponent implements AfterViewInit {
 
   clearHistoryPoints(): void {
     this.routeLayer.clearLayers();
+  }
+
+  closeTripsPanel(): void {
+    this.trips.set([]);
+    this.selectedTrip.set(null);
+    this.selectedVehicleId.set(null);
+    this.stopTripPlayback();
+    this.routeLayer.clearLayers();
+  }
+
+  clearLiveAlerts(): void {
+    this.alerts.set([]);
   }
 
   private initializeMap(): void {
@@ -396,6 +428,48 @@ export class FleetMapComponent implements AfterViewInit {
           console.error('Unable to load trips', err);
         }
       });
+  }
+
+  loadToday(): void {
+    const now = new Date();
+
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+
+    this.historyStart.set(this.toDatetimeLocal(start));
+    this.historyEnd.set(this.toDatetimeLocal(now));
+  }
+
+  loadLast7Days(): void {
+    const now = new Date();
+
+    const start = new Date();
+    start.setDate(start.getDate() - 7);
+
+    this.historyStart.set(this.toDatetimeLocal(start));
+    this.historyEnd.set(this.toDatetimeLocal(now));
+  }
+
+  loadLast30Days(): void {
+    const now = new Date();
+
+    const start = new Date();
+    start.setDate(start.getDate() - 30);
+
+    this.historyStart.set(this.toDatetimeLocal(start));
+    this.historyEnd.set(this.toDatetimeLocal(now));
+  }
+
+  formatDuration(minutes: number): string {
+
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+
+    if (hours === 0) {
+      return `${mins} min`;
+    }
+
+    return `${hours}h ${mins}m`;
   }
 
   private showVehicleHistory(vehicle: FleetTelematicsLocation): void {
