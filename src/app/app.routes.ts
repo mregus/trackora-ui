@@ -89,6 +89,12 @@ export const routes: Routes = [
         .then(m => m.FleetMapComponent)
   },
   {
+    path: 'admin/servicebus/deadletters',
+    loadComponent: () =>
+      import('./features/telematics/telematics/servicebus-deadletters/servicebus-deadletters.component')
+        .then(m => m.ServicebusDeadlettersComponent)
+  },
+  {
     path: '',
     pathMatch: 'full',
     redirectTo: 'dashboard'

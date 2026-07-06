@@ -228,3 +228,27 @@
 .panel-close:hover {
   color: #0f172a;
 }
+
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(120px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.dashboard-card {
+  background: white;
+  border-radius: 14px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+}
+
+.dashboard-card strong {
+  display: block;
+  font-size: 1.6rem;
+}
+
+.dashboard-card span {
+  color: #64748b;
+  font-size: .9rem;
+}

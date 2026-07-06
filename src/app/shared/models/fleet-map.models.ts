@@ -1,5 +1,6 @@
 export interface FleetTelematicsLocation {
   vehicleId: string;
+  status: 'ONLINE' | 'STALE' | 'OFFLINE';
   label: string;
   licensePlate: string;
   latitude: number;

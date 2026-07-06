@@ -13,7 +13,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { FleetService } from '../../../core/services/fleet.service';
 import { DashboardService } from '../../../core/services/dashboard.service';
 import { Fleet } from '../../../shared/models/fleet.models';
-import {DashboardSummary, FleetHealthBreakdown, FleetRecommendation} from '../../../shared/models/dashboard.models';
+import {
+  DashboardSummary,
+  FleetHealthBreakdown,
+  FleetRecommendation
+} from '../../../shared/models/dashboard.models';
 import { FleetContextService } from '../../../core/services/fleet-context.service';
 import { AiInsightService } from '../../../core/services/ai-insight.service';
 

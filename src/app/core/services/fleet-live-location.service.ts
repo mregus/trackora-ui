@@ -14,7 +14,6 @@ export class FleetLiveLocationService {
   connectToFleet(fleetId: string): Observable<LiveVehicleLocationEvent> {
     return new Observable(observer => {
       const wsUrl = this.getWebSocketUrl();
-      console.log('WS URL:', wsUrl);
 
       this.client = new Client({
         brokerURL: wsUrl,

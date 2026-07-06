@@ -1,0 +1,70 @@
+<section class="dlq-page">
+  <div class="dlq-header">
+    <div>
+      <h2>Service Bus Dead Letters</h2>
+      <p>{{ messages().length }} failed messages</p>
+    </div>
+
+    <button mat-stroked-button type="button" (click)="load()">
+      Refresh
+    </button>
+  </div>
+
+  <div class="dlq-layout">
+    <div class="dlq-list">
+      @for (message of messages(); track message.messageId) {
+        <mat-card
+          class="dlq-card"
+          [class.selected]="selected()?.messageId === message.messageId"
+          (click)="select(message)"
+        >
+          <strong>{{ message.deadLetterReason }}</strong>
+
+          <small>{{ message.messageId }}</small>
+
+          <p>{{ bodyPreview(message) }}</p>
+
+          <div class="dlq-meta">
+            <span>Delivery: {{ message.deliveryCount }}</span>
+            <span>{{ message.enqueuedTime | date:'short' }}</span>
+          </div>
+
+          <div class="dlq-actions">
+            <button
+              mat-stroked-button
+              type="button"
+              [disabled]="isJson(message)"
+              (click)="replay(message); $event.stopPropagation()"
+            >
+              Replay
+            </button>
+
+            <button
+              mat-stroked-button
+              type="button"
+              (click)="delete(message); $event.stopPropagation()"
+            >
+              Delete
+            </button>
+          </div>
+        </mat-card>
+      }
+    </div>
+
+    <mat-card class="dlq-detail">
+      @if (selected()) {
+        <h3>Message Detail</h3>
+
+        <p><strong>ID:</strong> {{ selected()!.messageId }}</p>
+        <p><strong>Reason:</strong> {{ selected()!.deadLetterReason }}</p>
+        <p><strong>Error:</strong> {{ selected()!.deadLetterErrorDescription }}</p>
+        <p><strong>Delivery Count:</strong> {{ selected()!.deliveryCount }}</p>
+        <p><strong>Enqueued:</strong> {{ selected()!.enqueuedTime | date:'medium' }}</p>
+
+        <pre>{{ selected()!.body }}</pre>
+      } @else {
+        <p>Select a dead-letter message.</p>
+      }
+    </mat-card>
+  </div>
+</section>

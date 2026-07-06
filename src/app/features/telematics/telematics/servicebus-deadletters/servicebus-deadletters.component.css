@@ -1,0 +1,69 @@
+.dlq-page {
+  padding: 1rem;
+}
+
+.dlq-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.dlq-header p {
+  color: #64748b;
+  margin: 0;
+}
+
+.dlq-layout {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 1rem;
+}
+
+.dlq-list {
+  display: grid;
+  gap: .75rem;
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+.dlq-card {
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.dlq-card.selected {
+  outline: 2px solid #2563eb;
+}
+
+.dlq-card small,
+.dlq-card p {
+  display: block;
+  margin-top: .5rem;
+}
+
+.dlq-card p {
+  color: #475569;
+}
+
+.dlq-meta,
+.dlq-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: .5rem;
+  margin-top: .75rem;
+}
+
+.dlq-detail {
+  padding: 1rem;
+  max-height: 75vh;
+  overflow: auto;
+}
+
+pre {
+  white-space: pre-wrap;
+  background: #0f172a;
+  color: white;
+  padding: 1rem;
+  border-radius: 12px;
+}

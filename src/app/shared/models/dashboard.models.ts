@@ -1,5 +1,3 @@
-import {DestroyRef, inject} from '@angular/core';
-
 export interface DashboardSummary {
   fleetId: string;
   fleetName: string;
@@ -14,10 +12,16 @@ export interface DashboardSummary {
   monthlyMaintenanceCost: number;
   monthlyFuelCost: number;
 
-  latestAiInsight: string;
+  latestAiInsight: string | null;
 
   fleetHealthScore: number;
   fleetHealthBreakdown: FleetHealthBreakdown;
+
+  onlineVehicles: number;
+  staleVehicles: number;
+  offlineVehicles: number;
+  packetsToday: number;
+  tripsToday: number;
 }
 
 export interface FleetHealthBreakdown {

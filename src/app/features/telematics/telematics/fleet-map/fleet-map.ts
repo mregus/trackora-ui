@@ -306,6 +306,7 @@ export class FleetMapComponent implements AfterViewInit {
         })
         .bindPopup(`
         <strong>${location.label}</strong><br/>
+        Status: ${location.status}<br/>
         Plate: ${location.licensePlate ?? 'N/A'}<br/>
         Speed: ${location.speedMph ?? 0} mph<br/>
         Fuel: ${location.fuelLevelPercent ?? 0}%<br/>
@@ -337,6 +338,14 @@ export class FleetMapComponent implements AfterViewInit {
       return '#2563eb';
     }
 
+    if (location.status === 'OFFLINE') {
+      return '#64748b';
+    }
+
+    if (location.status === 'STALE') {
+      return '#f59e0b';
+    }
+
     return '#64748b';
   }
 
@@ -362,11 +371,14 @@ export class FleetMapComponent implements AfterViewInit {
   private updateLiveVehicle(event: LiveVehicleLocationEvent): void {
     const current = this.locations();
 
-    const updated = current.some(location => location.vehicleId === event.vehicleId)
+    const onlineStatus: FleetTelematicsLocation['status'] = 'ONLINE';
+
+    const updated: FleetTelematicsLocation[] = current.some(location => location.vehicleId === event.vehicleId)
       ? current.map(location =>
         location.vehicleId === event.vehicleId
           ? {
             ...location,
+            status: onlineStatus,
             label: event.vehicleName,
             licensePlate: event.licensePlate ?? location.licensePlate,
             latitude: event.latitude,
@@ -383,6 +395,7 @@ export class FleetMapComponent implements AfterViewInit {
         ...current,
         {
           vehicleId: event.vehicleId,
+          status: onlineStatus,
           label: event.vehicleName,
           licensePlate: event.licensePlate ?? '',
           latitude: event.latitude,
