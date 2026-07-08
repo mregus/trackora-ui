@@ -28,7 +28,7 @@ import { MaintenanceService } from '../../../core/services/maintenance.service';
 import { Chart, registerables, ChartConfiguration } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 
-import { interval } from 'rxjs';
+import {interval, takeUntil} from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DestroyRef, inject } from '@angular/core';
 import {AlertContextService} from '../../../core/services/alert-context.service';
@@ -36,6 +36,7 @@ import {NotificationService} from '../../../core/services/notification.service';
 import {AuthService} from '../../../core/auth/auth.service';
 import {ActivityLogModels} from '../../../shared/models/activity-log.models';
 import {ActivityService} from '../../activity/activity';
+import {DashboardLiveService} from '../../../core/services/dashboard-live.service';
 
 Chart.register(...registerables);
 
@@ -90,7 +91,8 @@ export class DashboardComponent implements OnInit {
     private maintenanceService: MaintenanceService,
     private alertContextService: AlertContextService,
     private notificationService: NotificationService,
-    public authService: AuthService
+    public authService: AuthService,
+    public dashboardLiveService: DashboardLiveService,
   ) {}
 
   ngOnInit(): void {
@@ -132,6 +134,17 @@ export class DashboardComponent implements OnInit {
         this.selectedFleetId.set(selectedFleet.id);
         this.fleetContextService.setSelectedFleetId(selectedFleet.id);
         this.loadDashboardSummary(selectedFleet.id);
+
+        this.dashboardLiveService.connect(selectedFleet.id);
+
+        this.dashboardLiveService
+          .stream()
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe(summary => {
+            console.log('Live dashboard summary:', summary);
+            this.summary.set(summary);
+            this.updateVehicleStatusChart(summary);
+          });
       },
       error: err => {
         this.loading.set(false);
