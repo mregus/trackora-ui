@@ -215,3 +215,15 @@
     grid-template-columns: 1fr !important;
   }
 }
+
+.fleet-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.fleet-actions button {
+  flex: 1;
+  height: 46px;
+  border-radius: 12px;
+}

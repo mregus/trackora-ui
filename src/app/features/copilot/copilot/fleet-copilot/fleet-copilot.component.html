@@ -1,0 +1,134 @@
+<section class="copilot-page">
+
+  <header class="copilot-hero">
+    <div>
+      <h1>Fleet Copilot</h1>
+      <p>Ask questions about fleet safety, maintenance, alerts, and operations.</p>
+    </div>
+
+    <button
+      mat-stroked-button
+      type="button"
+      (click)="clearConversation()"
+    >
+      <mat-icon>delete_sweep</mat-icon>
+      Clear
+    </button>
+  </header>
+
+  <div class="copilot-layout">
+
+    <mat-card class="suggestions-card">
+      <h2>Suggested Questions</h2>
+
+      <div class="suggestion-list">
+        @for (suggestion of suggestedQuestions; track suggestion) {
+          <button
+            type="button"
+            class="suggestion-button"
+            (click)="askSuggested(suggestion)"
+            [disabled]="loading()"
+          >
+            <mat-icon>auto_awesome</mat-icon>
+            <span>{{ suggestion }}</span>
+          </button>
+        }
+      </div>
+    </mat-card>
+
+    <mat-card class="conversation-card">
+
+      <div
+        #messagesContainer
+        class="messages"
+      >
+        @for (message of messages(); track $index) {
+          <div
+            class="message-row"
+            [class.user]="message.role === 'USER'"
+            [class.assistant]="message.role === 'ASSISTANT'"
+          >
+            <div class="message-avatar">
+              <mat-icon>
+                {{ message.role === 'USER' ? 'person' : 'smart_toy' }}
+              </mat-icon>
+            </div>
+
+            <div class="message-bubble">
+              <p>{{ message.text }}</p>
+
+              @if (message.supportingFacts?.length) {
+                <div class="supporting-facts">
+                  <strong>Supporting facts</strong>
+
+                  <ul>
+                    @for (fact of message.supportingFacts; track fact) {
+                      <li>{{ fact }}</li>
+                    }
+                  </ul>
+                </div>
+              }
+
+              <small>
+                {{ message.generatedAt | date:'short' }}
+
+                @if (message.role === 'ASSISTANT') {
+                  · {{ message.aiGenerated ? 'AI generated' : 'Fleet data analysis' }}
+                }
+              </small>
+            </div>
+          </div>
+        }
+
+        @if (loading()) {
+          <div class="message-row assistant">
+            <div class="message-avatar">
+              <mat-icon>smart_toy</mat-icon>
+            </div>
+
+            <div class="message-bubble typing">
+              <mat-spinner diameter="22"></mat-spinner>
+              <span>Analyzing fleet data...</span>
+            </div>
+          </div>
+        }
+      </div>
+
+      @if (errorMessage()) {
+        <div class="copilot-error">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <form
+        class="copilot-input"
+        (ngSubmit)="submit()"
+      >
+        <mat-form-field appearance="outline">
+          <mat-label>Ask Fleet Copilot</mat-label>
+
+          <textarea
+            matInput
+            name="question"
+            [(ngModel)]="question"
+            rows="2"
+            maxlength="500"
+            placeholder="Which vehicle needs the most attention?"
+            [disabled]="loading()"
+          ></textarea>
+        </mat-form-field>
+
+        <button
+          mat-raised-button
+          type="submit"
+          [disabled]="loading() || !question.trim()"
+        >
+          <mat-icon>send</mat-icon>
+          Ask
+        </button>
+      </form>
+
+    </mat-card>
+
+  </div>
+</section>

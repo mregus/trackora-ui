@@ -19,7 +19,7 @@ import {FleetMemberService} from '../../../core/services/fleet-member.service';
 import {MatOption, MatSelect} from '@angular/material/select';
 import {FleetInvitation} from '../../../shared/models/fleet-invitation.models';
 import {FleetInvitationService} from '../../../core/services/fleet-invitation.service';
-import {RouterLink} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {FleetLiveLocationService} from '../../../core/services/fleet-live-location.service';
 
 @Component({
@@ -38,7 +38,6 @@ import {FleetLiveLocationService} from '../../../core/services/fleet-live-locati
     MatSnackBarModule,
     MatSelect,
     MatOption,
-    RouterLink
   ],
   templateUrl: './fleets.component.html',
   styleUrl: './fleets.component.css'
@@ -67,7 +66,8 @@ export class FleetsComponent implements OnInit {
     private fleetContextService: FleetContextService,
     private notificationService: NotificationService,
     private fleetMemberService: FleetMemberService,
-    private fleetInvitationService: FleetInvitationService
+    private fleetInvitationService: FleetInvitationService,
+    private router: Router,
   ) {
     this.selectedFleetId = this.fleetContextService.selectedFleetId;
 
@@ -288,5 +288,23 @@ export class FleetsComponent implements OnInit {
         );
       }
     });
+  }
+
+  openSafetyDashboard(fleetId: string): void {
+    this.router.navigate(['/fleets', fleetId, 'safety']);
+  }
+
+  openFleetDashboard(fleetId: string): void {
+    this.router.navigate(['/dashboard'], {
+      queryParams: { fleetId }
+    });
+  }
+
+  openFleetMap(fleetId: string): void {
+    this.router.navigate(['/fleets', fleetId, 'map']);
+  }
+
+  openFleetCopilot(fleetId: string): void {
+    this.router.navigate(['/fleets', fleetId, 'copilot']);
   }
 }

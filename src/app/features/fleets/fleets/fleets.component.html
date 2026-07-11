@@ -83,13 +83,49 @@
                   <mat-icon>check_circle</mat-icon>
                 }
               </button>
-              <button
-                mat-raised-button
-                color="primary"
-                [routerLink]="['/fleets', selectedFleetId(), 'map']"
-              >
-                Fleet Map
-              </button>
+
+<!--              <button-->
+<!--                mat-raised-button-->
+<!--                color="primary"-->
+<!--                [routerLink]="['/fleets', selectedFleetId(), 'map']"-->
+<!--              >-->
+<!--                Fleet Map-->
+<!--              </button>-->
+
+              <div class="fleet-actions">
+                <button
+                  mat-stroked-button
+                  color="primary"
+                  (click)="openFleetMap(fleet.id)">
+                  <mat-icon>map</mat-icon>
+                  Fleet Map
+                </button>
+
+                <button
+                  mat-stroked-button
+                  color="primary"
+                  (click)="openSafetyDashboard(fleet.id)">
+                  <mat-icon>shield</mat-icon>
+                  Safety
+                </button>
+
+                <button
+                  mat-stroked-button
+                  color="primary"
+                  (click)="openFleetDashboard(fleet.id)">
+                  <mat-icon>dashboard</mat-icon>
+                  Dashboard
+                </button>
+
+                <button
+                  mat-stroked-button
+                  color="primary"
+                  type="button"
+                  (click)="openFleetCopilot(fleet.id)">
+                  <mat-icon>smart_toy</mat-icon>
+                  Copilot
+                </button>
+              </div>
             }
           </div>
         }

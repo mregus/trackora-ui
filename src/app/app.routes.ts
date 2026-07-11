@@ -95,6 +95,18 @@ export const routes: Routes = [
         .then(m => m.ServicebusDeadlettersComponent)
   },
   {
+    path: 'fleets/:fleetId/safety',
+    loadComponent: () =>
+      import('./features/safety/safety/safety-dashboard/safety-dashboard.component')
+        .then(m => m.SafetyDashboardComponent)
+  },
+  {
+    path: 'fleets/:fleetId/copilot',
+    loadComponent: () =>
+      import('./features/copilot/copilot/fleet-copilot/fleet-copilot.component')
+        .then(m => m.FleetCopilotComponent)
+  },
+  {
     path: '',
     pathMatch: 'full',
     redirectTo: 'dashboard'
