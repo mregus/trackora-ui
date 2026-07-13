@@ -1,22 +1,21 @@
-import { CommonModule } from '@angular/common';
 import {
   Component,
   ElementRef,
   inject,
   OnInit,
-  signal,
   ViewChild
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import {FleetCopilotService} from '../../../../core/services/fleet-copilot.service';
-import {CopilotMessage} from '../../../../shared/models/fleet-copilot.models';
+
+import { FleetCopilotStateService } from '../../../../core/services/fleet-copilot-state.service';
 
 @Component({
   selector: 'app-fleet-copilot',
@@ -36,27 +35,15 @@ import {CopilotMessage} from '../../../../shared/models/fleet-copilot.models';
 export class FleetCopilotComponent implements OnInit {
 
   private readonly route = inject(ActivatedRoute);
-  private readonly copilotService = inject(FleetCopilotService);
+
+  readonly copilotState = inject(FleetCopilotStateService);
 
   @ViewChild('messagesContainer')
   private messagesContainer?: ElementRef<HTMLDivElement>;
 
-  fleetId = '';
   question = '';
 
-  loading = signal(false);
-  errorMessage = signal<string | null>(null);
-
-  messages = signal<CopilotMessage[]>([
-    {
-      role: 'ASSISTANT',
-      text: 'Ask me about fleet safety, device health, alerts, maintenance, or costs.',
-      generatedAt: new Date().toISOString(),
-      aiGenerated: false
-    }
-  ]);
-
-  suggestedQuestions = [
+  readonly suggestedQuestions = [
     'Which vehicle has the highest safety risk?',
     'How many vehicles are offline?',
     'What maintenance should I prioritize?',
@@ -68,57 +55,23 @@ export class FleetCopilotComponent implements OnInit {
     const fleetId = this.route.snapshot.paramMap.get('fleetId');
 
     if (!fleetId) {
-      this.errorMessage.set('Fleet ID is missing.');
+      this.copilotState.errorMessage.set('Fleet ID is missing.');
       return;
     }
 
-    this.fleetId = fleetId;
+    this.copilotState.initialize(fleetId);
   }
 
   submit(): void {
     const question = this.question.trim();
 
-    if (!question || !this.fleetId || this.loading()) {
+    if (!question) {
       return;
     }
 
-    this.messages.update(current => [
-      ...current,
-      {
-        role: 'USER',
-        text: question,
-        generatedAt: new Date().toISOString()
-      }
-    ]);
-
+    this.copilotState.submitQuestion(question);
     this.question = '';
-    this.loading.set(true);
-    this.errorMessage.set(null);
     this.scrollToBottom();
-
-    this.copilotService.ask(this.fleetId, { question }).subscribe({
-      next: response => {
-        this.messages.update(current => [
-          ...current,
-          {
-            role: 'ASSISTANT',
-            text: response.answer,
-            supportingFacts: response.supportingFacts,
-            generatedAt: response.generatedAt,
-            aiGenerated: response.aiGenerated
-          }
-        ]);
-
-        this.loading.set(false);
-        this.scrollToBottom();
-      },
-      error: err => {
-        this.loading.set(false);
-        this.errorMessage.set(
-          err?.error?.message ?? 'Unable to contact Fleet Copilot.'
-        );
-      }
-    });
   }
 
   askSuggested(question: string): void {
@@ -126,15 +79,41 @@ export class FleetCopilotComponent implements OnInit {
     this.submit();
   }
 
-  clearConversation(): void {
-    this.messages.set([
-      {
-        role: 'ASSISTANT',
-        text: 'Conversation cleared. What would you like to know about this fleet?',
-        generatedAt: new Date().toISOString(),
-        aiGenerated: false
-      }
-    ]);
+  loadConversation(conversationId: string): void {
+    this.copilotState.loadConversation(conversationId);
+    this.scrollToBottom();
+  }
+
+  startNewConversation(): void {
+    this.copilotState.startNewConversation();
+    this.question = '';
+  }
+
+  renameConversation(
+    conversationId: string,
+    currentTitle: string
+  ): void {
+    const title = window.prompt(
+      'Rename conversation',
+      currentTitle
+    );
+
+    if (title?.trim()) {
+      this.copilotState.renameConversation(
+        conversationId,
+        title
+      );
+    }
+  }
+
+  deleteConversation(conversationId: string): void {
+    const confirmed = window.confirm(
+      'Delete this conversation and all of its messages?'
+    );
+
+    if (confirmed) {
+      this.copilotState.deleteConversation(conversationId);
+    }
   }
 
   private scrollToBottom(): void {

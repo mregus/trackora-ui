@@ -9,7 +9,7 @@
     <button
       mat-stroked-button
       type="button"
-      (click)="clearConversation()"
+      (click)="copilotState.startNewConversation()"
     >
       <mat-icon>delete_sweep</mat-icon>
       Clear
@@ -27,7 +27,7 @@
             type="button"
             class="suggestion-button"
             (click)="askSuggested(suggestion)"
-            [disabled]="loading()"
+            [disabled]="copilotState.submitting()"
           >
             <mat-icon>auto_awesome</mat-icon>
             <span>{{ suggestion }}</span>
@@ -42,7 +42,7 @@
         #messagesContainer
         class="messages"
       >
-        @for (message of messages(); track $index) {
+        @for (message of copilotState.messages(); track $index) {
           <div
             class="message-row"
             [class.user]="message.role === 'USER'"
@@ -80,7 +80,7 @@
           </div>
         }
 
-        @if (loading()) {
+        @if (copilotState.submitting()) {
           <div class="message-row assistant">
             <div class="message-avatar">
               <mat-icon>smart_toy</mat-icon>
@@ -94,9 +94,9 @@
         }
       </div>
 
-      @if (errorMessage()) {
+      @if (copilotState.errorMessage()) {
         <div class="copilot-error">
-          {{ errorMessage() }}
+          {{ copilotState.errorMessage() }}
         </div>
       }
 
@@ -114,14 +114,26 @@
             rows="2"
             maxlength="500"
             placeholder="Which vehicle needs the most attention?"
-            [disabled]="loading()"
+            [disabled]="copilotState.submitting()"
           ></textarea>
         </mat-form-field>
+
+        @for (conversation of copilotState.conversations(); track conversation.id) {
+
+          <button
+            class="conversation-button"
+            (click)="loadConversation(conversation.id)">
+
+            {{ conversation.title }}
+
+          </button>
+
+        }
 
         <button
           mat-raised-button
           type="submit"
-          [disabled]="loading() || !question.trim()"
+          [disabled]="copilotState.submitting() || !question.trim()"
         >
           <mat-icon>send</mat-icon>
           Ask
