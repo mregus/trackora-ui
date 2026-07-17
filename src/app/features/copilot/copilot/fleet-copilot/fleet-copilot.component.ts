@@ -14,8 +14,12 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {
+  ConversationHistoryComponent
+} from './conversation-history/conversation-history.component';
 
 import { FleetCopilotStateService } from '../../../../core/services/fleet-copilot-state.service';
+import {CopilotConversationSummary} from '../../../../shared/models/fleet-copilot.models';
 
 @Component({
   selector: 'app-fleet-copilot',
@@ -27,7 +31,8 @@ import { FleetCopilotStateService } from '../../../../core/services/fleet-copilo
     MatCardModule,
     MatIconModule,
     MatInputModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    ConversationHistoryComponent
   ],
   templateUrl: './fleet-copilot.component.html',
   styleUrl: './fleet-copilot.component.css'
@@ -90,29 +95,32 @@ export class FleetCopilotComponent implements OnInit {
   }
 
   renameConversation(
-    conversationId: string,
-    currentTitle: string
+    conversation: CopilotConversationSummary
   ): void {
     const title = window.prompt(
       'Rename conversation',
-      currentTitle
+      conversation.title
     );
 
     if (title?.trim()) {
       this.copilotState.renameConversation(
-        conversationId,
+        conversation.id,
         title
       );
     }
   }
 
-  deleteConversation(conversationId: string): void {
+  deleteConversation(
+    conversation: CopilotConversationSummary
+  ): void {
     const confirmed = window.confirm(
-      'Delete this conversation and all of its messages?'
+      `Delete "${conversation.title}" and all its messages?`
     );
 
     if (confirmed) {
-      this.copilotState.deleteConversation(conversationId);
+      this.copilotState.deleteConversation(
+        conversation.id
+      );
     }
   }
 

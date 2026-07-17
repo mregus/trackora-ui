@@ -1,0 +1,90 @@
+<section class="history-panel">
+  <header class="history-header">
+    <div>
+      <h2>Conversations</h2>
+      <p>Your saved Fleet Copilot chats</p>
+    </div>
+
+    <button
+      mat-icon-button
+      type="button"
+      matTooltip="New conversation"
+      aria-label="Start new conversation"
+      (click)="startNewConversation()"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+  </header>
+
+  @if (loading()) {
+    <div class="loading-state">
+      <mat-spinner diameter="28"></mat-spinner>
+    </div>
+  } @else if (conversations().length === 0) {
+    <div class="empty-state">
+      <mat-icon>forum</mat-icon>
+      <strong>No conversations yet</strong>
+      <span>Start a new chat with Fleet Copilot.</span>
+
+      <button
+        mat-stroked-button
+        type="button"
+        (click)="startNewConversation()"
+      >
+        New Conversation
+      </button>
+    </div>
+  } @else {
+    <div class="conversation-list">
+      @for (
+        conversation of conversations();
+        track conversation.id
+        ) {
+        <article
+          class="conversation-item"
+          [class.selected]="
+            selectedConversationId() === conversation.id
+          "
+          tabindex="0"
+          role="button"
+          (click)="selectConversation(conversation.id)"
+          (keydown.enter)="selectConversation(conversation.id)"
+        >
+          <div class="conversation-icon">
+            <mat-icon>chat_bubble_outline</mat-icon>
+          </div>
+
+          <div class="conversation-content">
+            <strong>{{ conversation.title }}</strong>
+
+            <small>
+              {{ conversation.updatedAt | date:'MMM d, h:mm a' }}
+            </small>
+          </div>
+
+          <div class="conversation-actions">
+            <button
+              mat-icon-button
+              type="button"
+              matTooltip="Rename"
+              aria-label="Rename conversation"
+              (click)="rename($event, conversation)"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+
+            <button
+              mat-icon-button
+              type="button"
+              matTooltip="Delete"
+              aria-label="Delete conversation"
+              (click)="delete($event, conversation)"
+            >
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</section>

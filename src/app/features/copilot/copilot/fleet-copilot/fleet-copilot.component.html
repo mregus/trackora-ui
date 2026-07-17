@@ -17,23 +17,16 @@
   </header>
 
   <div class="copilot-layout">
-
-    <mat-card class="suggestions-card">
-      <h2>Suggested Questions</h2>
-
-      <div class="suggestion-list">
-        @for (suggestion of suggestedQuestions; track suggestion) {
-          <button
-            type="button"
-            class="suggestion-button"
-            (click)="askSuggested(suggestion)"
-            [disabled]="copilotState.submitting()"
-          >
-            <mat-icon>auto_awesome</mat-icon>
-            <span>{{ suggestion }}</span>
-          </button>
-        }
-      </div>
+    <mat-card class="history-card">
+      <app-conversation-history
+        [conversations]="copilotState.conversations()"
+        [selectedConversationId]="copilotState.conversationId()"
+        [loading]="copilotState.loadingConversations()"
+        (conversationSelected)="loadConversation($event)"
+        (newConversation)="startNewConversation()"
+        (renameRequested)="renameConversation($event)"
+        (deleteRequested)="deleteConversation($event)"
+      />
     </mat-card>
 
     <mat-card class="conversation-card">
@@ -118,18 +111,6 @@
           ></textarea>
         </mat-form-field>
 
-        @for (conversation of copilotState.conversations(); track conversation.id) {
-
-          <button
-            class="conversation-button"
-            (click)="loadConversation(conversation.id)">
-
-            {{ conversation.title }}
-
-          </button>
-
-        }
-
         <button
           mat-raised-button
           type="submit"
@@ -142,5 +123,22 @@
 
     </mat-card>
 
+    <mat-card class="suggestions-card">
+      <h2>Suggested Questions</h2>
+
+      <div class="suggestion-list">
+        @for (suggestion of suggestedQuestions; track suggestion) {
+          <button
+            type="button"
+            class="suggestion-button"
+            (click)="askSuggested(suggestion)"
+            [disabled]="copilotState.submitting()"
+          >
+            <mat-icon>auto_awesome</mat-icon>
+            <span>{{ suggestion }}</span>
+          </button>
+        }
+      </div>
+    </mat-card>
   </div>
 </section>

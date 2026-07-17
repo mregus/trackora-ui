@@ -28,12 +28,6 @@
   color: #cbd5e1;
 }
 
-.copilot-layout {
-  display: grid;
-  grid-template-columns: 320px minmax(0, 1fr);
-  gap: 20px;
-}
-
 .suggestions-card,
 .conversation-card {
   border-radius: 18px;
@@ -73,16 +67,6 @@
 
 .suggestion-button mat-icon {
   color: #6366f1;
-}
-
-.conversation-card {
-  display: grid;
-  grid-template-rows: minmax(420px, 65vh) auto auto;
-}
-
-.messages {
-  overflow-y: auto;
-  padding: 8px;
 }
 
 .message-row {
@@ -203,4 +187,38 @@
   .message-bubble {
     max-width: 88%;
   }
+}
+
+.copilot-layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr) 280px;
+  align-items: stretch;
+  gap: 18px;
+}
+
+.history-card,
+.conversation-card,
+.suggestions-card {
+  border-radius: 18px;
+}
+
+.history-card,
+.suggestions-card {
+  padding: 18px;
+  min-height: 620px;
+  max-height: 75vh;
+}
+
+.conversation-card {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto auto;
+
+  height: 75vh;
+  min-height: 620px;
+  padding: 18px;
+}
+
+.messages {
+  min-height: 0;
+  overflow-y: auto;
 }
