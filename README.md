@@ -1,183 +1,320 @@
-# Trackora UI
+# 🚗 Trackora UI
 
-Trackora UI is the Angular frontend for the Trackora fleet operations platform.
+![Angular](https://img.shields.io/badge/Angular-20-red)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
+![Angular Material](https://img.shields.io/badge/Angular%20Material-20-green)
+![License](https://img.shields.io/badge/license-MIT-blue)
 
-The application provides:
+Trackora UI is the modern Angular frontend for **Trackora**, a cloud-native fleet operations platform designed to help organizations manage vehicles, maintenance, fuel usage, operational alerts, and real-time fleet activity from a single dashboard.
 
-- Fleet management
-- Vehicle management
-- Maintenance tracking
-- Fuel logging and analytics
-- Operational alerts with severity filtering
-- AI-generated fleet and vehicle insights
-- Vehicle and maintenance document uploads
-- Dashboard charts and KPIs
-- Pagination and filtering
-- Responsive Material UI experience
+The application consumes the Trackora REST API and provides an intuitive, responsive experience for fleet managers, dispatchers, and administrators.
 
 ---
 
-## Tech Stack
+# ✨ Features
 
-- Angular 21
+## Dashboard
+
+- Fleet KPIs
+- Vehicle statistics
+- Fuel analytics
+- Maintenance summaries
+- Recent alerts
+- AI-generated fleet insights
+- Responsive dashboard widgets
+
+---
+
+## Fleet Management
+
+- Create and manage fleets
+- Fleet statistics
+- Fleet overview
+- Fleet filtering
+- Fleet detail pages
+
+---
+
+## Vehicle Management
+
+- Create, edit and archive vehicles
+- VIN management
+- Vehicle assignments
+- Mileage tracking
+- Vehicle details
+- Vehicle AI summaries
+- Vehicle document management
+
+---
+
+## Maintenance
+
+- Schedule maintenance
+- Maintenance history
+- Cost tracking
+- Service intervals
+- Upload invoices and service documents
+- Maintenance status tracking
+
+---
+
+## Fuel Management
+
+- Fuel log management
+- MPG calculations
+- Fuel cost analytics
+- Fuel history
+- Fuel efficiency insights
+
+---
+
+## Alerts
+
+- Operational alerts
+- Severity filtering
+
+Supported severities:
+
+- INFO
+- WARNING
+- CRITICAL
+
+Additional capabilities:
+
+- Alert resolution
+- Pagination
+- Search & filtering
+
+---
+
+## AI Fleet Copilot
+
+Trackora integrates AI-powered operational insights.
+
+Generate summaries for:
+
+- Fleets
+- Vehicles
+
+Features include:
+
+- AI-generated recommendations
+- Fleet summaries
+- Vehicle summaries
+- Error handling
+- Loading indicators
+- Daily usage limits
+- Mock AI support for development
+
+---
+
+## Authentication
+
+- JWT Authentication
+- Login
+- Registration
+- Route Guards
+- HTTP Interceptor
+- Automatic token handling
+- Session persistence
+
+---
+
+## UI Features
+
+- Angular Material
+- Responsive layouts
+- Mobile-friendly design
+- Snackbar notifications
+- Loading spinners
+- Confirmation dialogs
+- Pagination
+- Search
+- Filtering
+- Form validation
+- Lazy-loaded feature modules
+- Standalone Angular components
+
+---
+
+# 🛠 Tech Stack
+
+- Angular 20
 - Angular Material
 - TypeScript
 - RxJS
 - Angular Signals
 - Chart.js
-- Vite
+- Leaflet (Maps)
+- STOMP/WebSockets
 - JWT Authentication
+- REST APIs
 
 ---
 
-## Features
-
-### Dashboard
-- Fleet KPIs
-- Fuel analytics
-- Maintenance summaries
-- AI-generated fleet insights
-- Open alert counts
-
-### Vehicles
-- Vehicle management
-- Vehicle detail views
-- VIN support
-- Fleet reassignment
-- Mileage updates
-- Vehicle AI summaries
-
-### Maintenance
-- Maintenance scheduling
-- Maintenance history
-- Status tracking
-- Maintenance document uploads
-- Invoice and image support
-
-### Fuel Logs
-- Fuel tracking
-- MPG analytics
-- Fuel anomaly alerts
-
-### Alerts
-- Severity levels:
-  - CRITICAL
-  - WARNING
-  - INFO
-- Filtering
-- Pagination
-- Alert resolution workflows
-
-### Documents
-- Vehicle document uploads
-- Maintenance invoice uploads
-- Image validation
-- Secure downloads
-- File size limits
-
----
-
-## Project Structure
+# 📂 Project Structure
 
 ```text
 src/app
- ├── core
- ├── features
- │    ├── alerts
- │    ├── auth
- │    ├── dashboard
- │    ├── fuel
- │    ├── maintenance
- │    └── vehicles
- ├── shared
- └── layout
+├── core
+│   ├── guards
+│   ├── interceptors
+│   ├── services
+│   └── models
+│
+├── features
+│   ├── auth
+│   ├── dashboard
+│   ├── fleets
+│   ├── vehicles
+│   ├── maintenance
+│   ├── fuel
+│   ├── alerts
+│   ├── ai
+│   └── documents
+│
+├── layout
+│
+├── shared
+│   ├── components
+│   ├── pipes
+│   └── directives
+│
+└── environments
 ```
 
 ---
 
-## Environment Configuration
+# ⚙️ Environment Configuration
 
-Update: `src/environments/environment.ts`
+Update:
+
+```text
+src/environments/environment.ts
+```
 
 Example:
-```javascript
+
+```typescript
 export const environment = {
   production: false,
   apiBaseUrl: 'http://localhost:8080/api'
 };
 ```
 
-## Development Server
+---
 
-Install dependencies: `npm install`
+# 🚀 Running Locally
 
-Run locally: `ng serve`
+Install dependencies:
 
-Application URL: `http://localhost:4200`
+```bash
+npm install
+```
 
-## Building
+Start the development server:
 
-Production build: `ng build`
+```bash
+ng serve
+```
 
-Build artifacts are generated in folder: `dist`
+Application:
 
-## Running Tests
-
-Unit tests: `ng test`
+```
+http://localhost:4200
+```
 
 ---
 
-## Authentication
+# 🏗 Production Build
 
-- Trackora UI authenticates using JWT tokens issued by the backend API.
+```bash
+ng build
+```
 
-### Authentication flow:
+Production files are generated in:
 
-- Login/Register
-- Receive JWT token
-- Store token locally
-- Automatically attach token to API requests
-- AI Insights
+```
+dist/
+```
 
-### Trackora supports AI-generated operational summaries for:
+---
 
-- Fleets
-- Vehicles
+# 🧪 Testing
 
-### Protections include:
+Run unit tests:
 
-- Daily generation limits
-- Mock AI mode support
-- Snackbar error handling
+```bash
+ng test
+```
 
-### UI Features
+---
 
-- Angular Material design
-- Snackbar notifications
-- Responsive layouts
-- Loading states
-- Pagination
-- Filtering
-- Severity badges
-- Confirmation dialogs
-- Backend API
+# 🔐 Backend
 
-### The frontend expects the Trackora API backend to be running:
+Trackora UI communicates with the Trackora Spring Boot backend.
 
-http://localhost:8080
+Default local API:
 
-### Swagger UI:
+```
+http://localhost:8080/api
+```
 
+Swagger:
+
+```
 http://localhost:8080/swagger-ui/index.html
+```
 
+---
 
+# ☁️ Deployment
 
-## Future Improvements/Potential future enhancements:
+Current production deployment:
 
-- Dark mode
+| Component | Platform |
+|------------|----------|
+| Frontend | Vercel |
+| Backend | Render |
+| Database | PostgreSQL |
+| Messaging | Azure Service Bus |
+
+---
+
+# 📈 Observability
+
+The backend exposes production metrics using:
+
+- Spring Boot Actuator
+- Micrometer
+- Prometheus endpoint
+
+Metrics are available through:
+
+```
+/actuator/prometheus
+```
+
+---
+
+# 🔮 Roadmap
+
+Future enhancements include:
+
+- Dark Mode
 - Role-based access control
-- Multi-tenant organizations
-- Real-time notifications (rabbitmq or kafka)
-- Mobile app support
-- Export/reporting features (new microservice)
-- GPS tracking (new microservice)
+- Organization management
+- Real-time notifications
+- Advanced reporting
+- GPS tracking
+- Driver management
+- Geofencing
+- Mobile application
+- Offline support
+- Push notifications
+
+---
+
+# 📄 License
+
+MIT License
