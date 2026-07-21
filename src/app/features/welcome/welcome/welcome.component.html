@@ -1,65 +1,690 @@
 <div class="welcome-page">
-  <section class="hero">
-    <div class="hero-content">
-      <div class="brand-pill">AI Fleet Operations Platform</div>
+  <header class="top-nav">
+    <a class="brand" routerLink="/" aria-label="Trackora home">
+      <div class="brand-mark">
+        <mat-icon>route</mat-icon>
+      </div>
 
-      <h1>
-        Run smarter fleets with
-        <span>Trackora</span>
-      </h1>
+      <div class="brand-name">
+        <strong>Trackora</strong>
+        <span>Fleet Intelligence</span>
+      </div>
+    </a>
 
-      <p>
-        Trackora helps teams manage vehicles, maintenance, fuel, alerts,
-        documents, and AI-powered operational insights in one modern dashboard.
-      </p>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#copilot">Fleet Copilot</a>
+      <a href="#technology">Technology</a>
+    </nav>
 
-      <div class="hero-actions">
-        <button mat-raised-button color="primary" routerLink="/login">
-          Sign In
+    <div class="nav-actions">
+      <button mat-button routerLink="/login">
+        Sign In
+      </button>
+
+      <button mat-flat-button color="primary" routerLink="/login">
+        Get Started
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <div class="brand-pill">
+          <mat-icon>auto_awesome</mat-icon>
+          AI-Powered Fleet Operations
+        </div>
+
+        <h1>
+          Run a safer, smarter, and more efficient fleet with
+          <span>Trackora</span>
+        </h1>
+
+        <p class="hero-description">
+          Trackora brings vehicle tracking, maintenance, fuel analytics,
+          driver safety, alerts, documents, and AI-powered operational insights
+          into one modern fleet management platform.
+        </p>
+
+        <div class="hero-actions">
+          <button mat-flat-button color="primary" routerLink="/login">
+            <mat-icon>login</mat-icon>
+            Sign In
+          </button>
+
+          <button mat-stroked-button routerLink="/dashboard">
+            <mat-icon>dashboard</mat-icon>
+            Explore Dashboard
+          </button>
+        </div>
+
+        <div class="hero-highlights">
+          <span>
+            <mat-icon>location_on</mat-icon>
+            Live GPS tracking
+          </span>
+
+          <span>
+            <mat-icon>smart_toy</mat-icon>
+            AI Fleet Copilot
+          </span>
+
+          <span>
+            <mat-icon>notifications_active</mat-icon>
+            Real-time alerts
+          </span>
+
+          <span>
+            <mat-icon>monitor_heart</mat-icon>
+            Vehicle health
+          </span>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-card">
+          <div class="card-header">
+            <div>
+              <span class="card-eyebrow">Fleet Overview</span>
+              <h2>Operations Dashboard</h2>
+            </div>
+
+            <span class="live-indicator">
+              <span class="pulse-dot"></span>
+              Live
+            </span>
+          </div>
+
+          <div class="status-row">
+            <div>
+              <span class="dot green"></span>
+              Fleet Health
+            </div>
+
+            <strong>92%</strong>
+          </div>
+
+          <div class="health-bar">
+            <span style="width: 92%"></span>
+          </div>
+
+          <div class="metric-grid">
+            <article>
+              <div class="metric-icon">
+                <mat-icon>local_shipping</mat-icon>
+              </div>
+
+              <strong>24</strong>
+              <span>Vehicles</span>
+            </article>
+
+            <article>
+              <div class="metric-icon warning">
+                <mat-icon>warning</mat-icon>
+              </div>
+
+              <strong>7</strong>
+              <span>Open Alerts</span>
+            </article>
+
+            <article>
+              <div class="metric-icon fuel">
+                <mat-icon>local_gas_station</mat-icon>
+              </div>
+
+              <strong>$4.2k</strong>
+              <span>Fuel Spend</span>
+            </article>
+
+            <article>
+              <div class="metric-icon service">
+                <mat-icon>build</mat-icon>
+              </div>
+
+              <strong>3</strong>
+              <span>Due Services</span>
+            </article>
+          </div>
+
+          <div class="insight-box">
+            <div class="insight-header">
+              <mat-icon>auto_awesome</mat-icon>
+              <strong>Fleet Copilot Insight</strong>
+            </div>
+
+            <p>
+              Maintenance risk is trending upward. Prioritize overdue service
+              for high-mileage vehicles this week.
+            </p>
+
+            <button type="button">
+              Review recommendation
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="floating-card vehicle-card">
+          <div class="vehicle-icon">
+            <mat-icon>local_shipping</mat-icon>
+          </div>
+
+          <div>
+            <strong>Ford Transit 350</strong>
+            <span>Moving · 42 mph</span>
+          </div>
+
+          <span class="dot green"></span>
+        </div>
+
+        <div class="floating-card alert-card">
+          <mat-icon>report_problem</mat-icon>
+
+          <div>
+            <strong>Maintenance Due</strong>
+            <span>Vehicle TRK-104</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="trust-strip" aria-label="Platform highlights">
+      <div>
+        <strong>Real-time</strong>
+        <span>Fleet visibility</span>
+      </div>
+
+      <div>
+        <strong>AI-powered</strong>
+        <span>Operational insights</span>
+      </div>
+
+      <div>
+        <strong>Event-driven</strong>
+        <span>Telemetry processing</span>
+      </div>
+
+      <div>
+        <strong>Cloud-hosted</strong>
+        <span>Secure access anywhere</span>
+      </div>
+    </section>
+
+    <section id="features" class="section features-section">
+      <div class="section-heading">
+        <span class="section-label">Platform capabilities</span>
+
+        <h2>Everything your fleet needs in one place</h2>
+
+        <p>
+          Trackora connects daily fleet operations with live vehicle data so
+          your team can make faster and more informed decisions.
+        </p>
+      </div>
+
+      <div class="feature-grid">
+        <article class="feature-card">
+          <div class="feature-icon">
+            <mat-icon>directions_car</mat-icon>
+          </div>
+
+          <h3>Fleet Management</h3>
+
+          <p>
+            Organize fleets, vehicles, drivers, registrations, insurance,
+            assignments, and operational records from one dashboard.
+          </p>
+
+          <span class="feature-link">
+            Centralized fleet records
+            <mat-icon>arrow_forward</mat-icon>
+          </span>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon">
+            <mat-icon>my_location</mat-icon>
+          </div>
+
+          <h3>Live Vehicle Tracking</h3>
+
+          <p>
+            Monitor current vehicle locations, movement, ignition state, speed,
+            trip history, routes, and idle activity.
+          </p>
+
+          <span class="feature-link">
+            Real-time fleet visibility
+            <mat-icon>arrow_forward</mat-icon>
+          </span>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon">
+            <mat-icon>build_circle</mat-icon>
+          </div>
+
+          <h3>Maintenance Management</h3>
+
+          <p>
+            Schedule preventive service, record maintenance history, track
+            costs, and identify vehicles with overdue work.
+          </p>
+
+          <span class="feature-link">
+            Reduce vehicle downtime
+            <mat-icon>arrow_forward</mat-icon>
+          </span>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon">
+            <mat-icon>local_gas_station</mat-icon>
+          </div>
+
+          <h3>Fuel Analytics</h3>
+
+          <p>
+            Track fuel purchases, operating costs, consumption trends, fuel
+            efficiency, and vehicles requiring attention.
+          </p>
+
+          <span class="feature-link">
+            Understand fuel spending
+            <mat-icon>arrow_forward</mat-icon>
+          </span>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon">
+            <mat-icon>health_and_safety</mat-icon>
+          </div>
+
+          <h3>Driver Safety</h3>
+
+          <p>
+            Review speeding, harsh braking, acceleration, hard turns, excessive
+            idle, and other safety events.
+          </p>
+
+          <span class="feature-link">
+            Improve fleet safety
+            <mat-icon>arrow_forward</mat-icon>
+          </span>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon">
+            <mat-icon>notifications_active</mat-icon>
+          </div>
+
+          <h3>Smart Alerts</h3>
+
+          <p>
+            Receive alerts for engine faults, device connectivity, maintenance,
+            unsafe driving, excessive idle, and vehicle health.
+          </p>
+
+          <span class="feature-link">
+            Respond before issues grow
+            <mat-icon>arrow_forward</mat-icon>
+          </span>
+        </article>
+      </div>
+    </section>
+
+    <section id="how-it-works" class="section workflow-section">
+      <div class="section-heading">
+        <span class="section-label">How Trackora works</span>
+
+        <h2>From vehicle telemetry to actionable decisions</h2>
+
+        <p>
+          Trackora securely transforms raw GPS and vehicle information into
+          live operational insights.
+        </p>
+      </div>
+
+      <div class="workflow-grid">
+        <article class="workflow-step">
+          <span class="step-number">01</span>
+
+          <div class="step-icon">
+            <mat-icon>settings_input_antenna</mat-icon>
+          </div>
+
+          <h3>Collect</h3>
+
+          <p>
+            Connected GPS and OBD-II devices capture location, speed, ignition,
+            diagnostics, and vehicle activity.
+          </p>
+        </article>
+
+        <div class="workflow-connector">
+          <mat-icon>arrow_forward</mat-icon>
+        </div>
+
+        <article class="workflow-step">
+          <span class="step-number">02</span>
+
+          <div class="step-icon">
+            <mat-icon>hub</mat-icon>
+          </div>
+
+          <h3>Process</h3>
+
+          <p>
+            Events are delivered through Azure Service Bus and processed by the
+            Trackora telematics pipeline.
+          </p>
+        </article>
+
+        <div class="workflow-connector">
+          <mat-icon>arrow_forward</mat-icon>
+        </div>
+
+        <article class="workflow-step">
+          <span class="step-number">03</span>
+
+          <div class="step-icon">
+            <mat-icon>analytics</mat-icon>
+          </div>
+
+          <h3>Analyze</h3>
+
+          <p>
+            Trackora updates vehicle state, reconstructs trips, calculates
+            safety events, and evaluates fleet health.
+          </p>
+        </article>
+
+        <div class="workflow-connector">
+          <mat-icon>arrow_forward</mat-icon>
+        </div>
+
+        <article class="workflow-step">
+          <span class="step-number">04</span>
+
+          <div class="step-icon">
+            <mat-icon>insights</mat-icon>
+          </div>
+
+          <h3>Act</h3>
+
+          <p>
+            Dashboards, alerts, and Fleet Copilot recommendations help teams
+            respond quickly and operate efficiently.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="copilot" class="section copilot-section">
+      <div class="copilot-content">
+        <div class="section-heading align-left">
+          <span class="section-label">
+            <mat-icon>auto_awesome</mat-icon>
+            AI Fleet Copilot
+          </span>
+
+          <h2>Ask questions about your fleet in plain language</h2>
+
+          <p>
+            Fleet Copilot connects natural-language questions with live fleet
+            information, helping managers find risks, understand trends, and
+            prioritize work.
+          </p>
+        </div>
+
+        <div class="copilot-benefits">
+          <div>
+            <mat-icon>check_circle</mat-icon>
+            <span>Query live fleet data</span>
+          </div>
+
+          <div>
+            <mat-icon>check_circle</mat-icon>
+            <span>Identify operational risks</span>
+          </div>
+
+          <div>
+            <mat-icon>check_circle</mat-icon>
+            <span>Review maintenance needs</span>
+          </div>
+
+          <div>
+            <mat-icon>check_circle</mat-icon>
+            <span>Summarize fleet performance</span>
+          </div>
+        </div>
+
+        <button mat-flat-button color="primary" routerLink="/login">
+          Try Fleet Copilot
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </div>
+
+      <div class="copilot-demo">
+        <div class="chat-window">
+          <div class="chat-header">
+            <div class="copilot-avatar">
+              <mat-icon>smart_toy</mat-icon>
+            </div>
+
+            <div>
+              <strong>Trackora Fleet Copilot</strong>
+              <span>
+                <span class="dot green"></span>
+                Ready
+              </span>
+            </div>
+          </div>
+
+          <div class="chat-message user-message">
+            Which vehicles need attention today?
+          </div>
+
+          <div class="chat-message assistant-message">
+            <div class="message-label">
+              <mat-icon>auto_awesome</mat-icon>
+              Fleet Copilot
+            </div>
+
+            <p>
+              Three vehicles require attention. TRK-104 is overdue for service,
+              VAN-208 has an active engine fault, and TRK-115 has been offline
+              for more than one hour.
+            </p>
+
+            <div class="recommendation-list">
+              <span>
+                <mat-icon>build</mat-icon>
+                Schedule TRK-104 service
+              </span>
+
+              <span>
+                <mat-icon>warning</mat-icon>
+                Inspect VAN-208 engine fault
+              </span>
+
+              <span>
+                <mat-icon>signal_wifi_off</mat-icon>
+                Check TRK-115 device
+              </span>
+            </div>
+          </div>
+
+          <div class="chat-input">
+            <span>Ask about your fleet...</span>
+            <button type="button" aria-label="Send message">
+              <mat-icon>send</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alert-types-section">
+      <div class="section-heading">
+        <span class="section-label">Proactive monitoring</span>
+
+        <h2>Know what needs attention before it becomes a bigger problem</h2>
+      </div>
+
+      <div class="alert-type-grid">
+        <div>
+          <mat-icon>speed</mat-icon>
+          <span>Speeding</span>
+        </div>
+
+        <div>
+          <mat-icon>warning</mat-icon>
+          <span>Engine Faults</span>
+        </div>
+
+        <div>
+          <mat-icon>timer</mat-icon>
+          <span>Excessive Idle</span>
+        </div>
+
+        <div>
+          <mat-icon>build</mat-icon>
+          <span>Maintenance Due</span>
+        </div>
+
+        <div>
+          <mat-icon>battery_alert</mat-icon>
+          <span>Low Battery</span>
+        </div>
+
+        <div>
+          <mat-icon>signal_wifi_off</mat-icon>
+          <span>Device Offline</span>
+        </div>
+
+        <div>
+          <mat-icon>car_crash</mat-icon>
+          <span>Harsh Driving</span>
+        </div>
+
+        <div>
+          <mat-icon>local_gas_station</mat-icon>
+          <span>Fuel Risk</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="technology" class="section technology-section">
+      <div class="technology-content">
+        <div class="section-heading align-left">
+          <span class="section-label">Modern engineering</span>
+
+          <h2>Built as a secure, cloud-hosted fleet platform</h2>
+
+          <p>
+            Trackora uses a modern full-stack architecture designed for
+            real-time telemetry, scalable backend workflows, secure
+            multi-tenant access, and production observability.
+          </p>
+        </div>
+
+        <div class="technology-tags">
+          <span>Java 21</span>
+          <span>Spring Boot 3</span>
+          <span>Angular 20</span>
+          <span>PostgreSQL</span>
+          <span>Azure Service Bus</span>
+          <span>OpenAI</span>
+          <span>WebSockets</span>
+          <span>Docker</span>
+          <span>Prometheus</span>
+          <span>Grafana</span>
+          <span>Render</span>
+          <span>Vercel</span>
+        </div>
+      </div>
+
+      <div class="architecture-card">
+        <div class="architecture-row">
+          <div>
+            <mat-icon>directions_car</mat-icon>
+            <span>Vehicle Devices</span>
+          </div>
+
+          <mat-icon>arrow_downward</mat-icon>
+
+          <div>
+            <mat-icon>cloud_queue</mat-icon>
+            <span>Azure Service Bus</span>
+          </div>
+
+          <mat-icon>arrow_downward</mat-icon>
+
+          <div>
+            <mat-icon>dns</mat-icon>
+            <span>Trackora Services</span>
+          </div>
+
+          <mat-icon>arrow_downward</mat-icon>
+
+          <div>
+            <mat-icon>dashboard</mat-icon>
+            <span>Dashboard & Alerts</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section final-cta">
+      <div>
+        <span class="section-label">Get started</span>
+
+        <h2>Bring visibility and intelligence to your fleet operations</h2>
+
+        <p>
+          Sign in to explore vehicle tracking, maintenance, safety analytics,
+          real-time alerts, and the Trackora Fleet Copilot.
+        </p>
+      </div>
+
+      <div class="final-cta-actions">
+        <button mat-flat-button color="primary" routerLink="/login">
+          Sign In to Trackora
+          <mat-icon>arrow_forward</mat-icon>
         </button>
 
         <button mat-stroked-button routerLink="/dashboard">
           View Dashboard
         </button>
       </div>
-    </div>
+    </section>
+  </main>
 
-    <div class="hero-card">
-      <div class="status-row">
-        <span class="dot green"></span>
-        Fleet Health
-        <strong>92%</strong>
+  <footer class="footer">
+    <div class="footer-brand">
+      <div class="brand-mark">
+        <mat-icon>route</mat-icon>
       </div>
 
-      <div class="metric-grid">
-        <div>
-          <strong>24</strong>
-          <span>Vehicles</span>
-        </div>
-
-        <div>
-          <strong>7</strong>
-          <span>Open Alerts</span>
-        </div>
-
-        <div>
-          <strong>$4.2k</strong>
-          <span>Fuel Spend</span>
-        </div>
-
-        <div>
-          <strong>3</strong>
-          <span>Due Services</span>
-        </div>
-      </div>
-
-      <div class="insight-box">
-        <strong>AI Insight</strong>
-        <p>
-          Maintenance risk is trending upward. Prioritize overdue service on
-          high-mileage vehicles.
-        </p>
+      <div>
+        <strong>Trackora</strong>
+        <span>AI-Powered Fleet Operations</span>
       </div>
     </div>
-  </section>
+
+    <div class="footer-links">
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#copilot">Fleet Copilot</a>
+      <a href="#technology">Technology</a>
+    </div>
+
+    <p>
+      © {{ currentYear }} Trackora. Built with Java, Spring Boot, Angular, and
+      cloud-native technologies.
+    </p>
+  </footer>
 </div>
